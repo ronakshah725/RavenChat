@@ -3,4 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    </resources>
+    <!-- Fonts -->
+    <dimen name="fontsize_heading">25sp</dimen>
+
+    <!-- Margins around items -->
+    <dimen name="elements_bottom_margin">10dp</dimen>
+</resources>
