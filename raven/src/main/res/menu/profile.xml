@@ -8,5 +8,5 @@
         android:title="@string/action_saveprofile"
         android:orderInCategory="100"
         app:showAsAction="always|withText"
-        android:icon="@android:drawable/ic_menu_save"/>
+        android:icon="@drawable/ic_action_done"/>
 </menu>

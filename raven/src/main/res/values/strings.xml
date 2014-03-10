@@ -9,5 +9,8 @@
     <string name="action_saveprofile">Save</string>
     <string name="username">Username</string>
     <string name="namestr">Name</string>
+    <string name="placeholder_contactname">Contact Name</string>
+    <string name="placeholder_messagepreview">This is a long message ....</string>
+    <string name="title_activity_message_list">Messages</string>
 
 </resources>
