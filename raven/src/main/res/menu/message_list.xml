@@ -3,8 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sumitgouthaman.raven.MessageListActivity" >
     
+    <item android:id="@+id/action_addContact"
+        android:title="@string/action_addContact"
+        android:icon="@drawable/ic_action_add_person"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+    <item android:id="@+id/action_editProfile"
+        android:title="@string/action_editProfile"
+        android:icon="@drawable/ic_action_edit"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
+        android:icon="@drawable/ic_action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

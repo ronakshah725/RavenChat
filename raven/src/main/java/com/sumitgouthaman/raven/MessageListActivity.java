@@ -1,15 +1,14 @@
 package com.sumitgouthaman.raven;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.ListView;
 
 import com.sumitgouthaman.raven.listadapters.MessageListAdapter;
@@ -44,9 +43,11 @@ public class MessageListActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        if (id == R.id.action_editProfile) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -63,8 +64,8 @@ public class MessageListActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_message_list, container, false);
 
-            MessageListItem[] messages = new MessageListItem[5];
-            for (int i = 0; i < 5; i++) {
+            MessageListItem[] messages = new MessageListItem[10];
+            for (int i = 0; i < 10; i++) {
                 messages[i] = new MessageListItem();
                 messages[i].contactName = "Contact " + (i + 1);
                 messages[i].messagePreview = "This is a long message sent by contact " + (i + 1);

@@ -12,5 +12,7 @@
     <string name="placeholder_contactname">Contact Name</string>
     <string name="placeholder_messagepreview">This is a long message ....</string>
     <string name="title_activity_message_list">Messages</string>
+    <string name="action_addContact">Add Contact</string>
+    <string name="action_editProfile">Edit Profile</string>
 
 </resources>
