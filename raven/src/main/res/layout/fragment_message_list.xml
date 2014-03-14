@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context="com.sumitgouthaman.raven.MessageListActivity$PlaceholderFragment">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/listView_MessageList"
-        android:scrollbarStyle="outsideOverlay"/>
+        android:scrollbarStyle="outsideOverlay"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"/>
 </RelativeLayout>
