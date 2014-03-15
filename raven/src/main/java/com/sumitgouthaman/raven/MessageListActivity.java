@@ -1,5 +1,7 @@
 package com.sumitgouthaman.raven;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,10 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.sumitgouthaman.raven.listadapters.MessageListAdapter;
 import com.sumitgouthaman.raven.models.MessageListItem;
+import com.sumitgouthaman.raven.persistence.Persistence;
 
 public class MessageListActivity extends ActionBarActivity {
 
@@ -26,6 +30,8 @@ public class MessageListActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        initialCheck();
     }
 
 
@@ -44,6 +50,8 @@ public class MessageListActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -69,11 +77,36 @@ public class MessageListActivity extends ActionBarActivity {
                 messages[i].messagePreview = "This is a long message sent by contact " + (i + 1);
             }
 
-            ListView messagesList = (ListView)rootView.findViewById(R.id.listView_MessageList);
+            ListView messagesList = (ListView) rootView.findViewById(R.id.listView_MessageList);
             MessageListAdapter mla = new MessageListAdapter(getActivity(), messages);
             messagesList.setAdapter(mla);
 
             return rootView;
+        }
+    }
+
+    public void initialCheck() {
+        String username = Persistence.getUsername(this);
+        if (username == null) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Choose username");
+            alert.setMessage(getResources().getString(R.string.message_username_not_set));
+            final EditText input = new EditText(this);
+            alert.setView(input);
+
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String chosenUsername = input.getText().toString();
+                    Persistence.setUsername(MessageListActivity.this, chosenUsername);
+                }
+            });
+
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    finish();
+                }
+            });
+            alert.show();
         }
     }
 
