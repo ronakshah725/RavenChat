@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/chatbubble_surrounding_padding"
+    android:paddingRight="@dimen/chatbubble_indented_padding"
+    android:paddingLeft="@dimen/chatbubble_surrounding_padding"
+    android:paddingTop="@dimen/chatbubble_surrounding_padding">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/chat_bubble_blue"
+        android:padding="@dimen/chatbubble_surrounding_padding">
+
+        <TextView
+            android:id="@+id/textView_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/placeholder_messagepreview"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingBottom="@dimen/elements_bottom_margin"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/placeholder_timestamp"
+            android:id="@+id/textView_timestamp"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/color_timestamp"
+            android:layout_below="@id/textView_message"/>
+    </RelativeLayout>
+</RelativeLayout>

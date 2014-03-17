@@ -1,6 +1,7 @@
 package com.sumitgouthaman.raven.listadapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.sumitgouthaman.raven.ChatThreadActivity;
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.MessageListItem;
 
@@ -39,7 +41,13 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
         if (messageListItems[position].unread) {
             contactNameField.setTypeface(null, Typeface.BOLD);
         }
-
+        rowView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ChatThreadActivity.class);
+                context.startActivity(intent);
+            }
+        });
         return rowView;
     }
 }

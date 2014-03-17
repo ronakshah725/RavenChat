@@ -19,7 +19,12 @@
         <activity
             android:name="com.sumitgouthaman.raven.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MessageListActivity">
+            android:parentActivityName="com.sumitgouthaman.raven.MessageListActivity" >
+        </activity>
+        <activity
+            android:name="com.sumitgouthaman.raven.ChatThreadActivity"
+            android:label="@string/title_activity_chat_thread"
+            android:parentActivityName="com.sumitgouthaman.raven.MessageListActivity">
         </activity>
     </application>
 
