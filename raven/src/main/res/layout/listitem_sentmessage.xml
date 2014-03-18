@@ -33,6 +33,7 @@
             android:id="@+id/textView_timestamp"
             android:layout_alignParentRight="true"
             android:textColor="@color/color_timestamp"
-            android:layout_below="@id/textView_message"/>
+            android:layout_below="@id/textView_message"
+            android:paddingBottom="@dimen/elements_bottom_margin"/>
     </RelativeLayout>
 </RelativeLayout>

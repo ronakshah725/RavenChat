@@ -22,5 +22,8 @@
     <string name="settings_saved">Settings Saved</string>
     <string name="placeholder_timestamp">10 Feb 2014, 17:55 am</string>
     <string name="title_activity_chat_thread">Chat Thread</string>
+    <string name="title_activity_add_contact">Add Contact</string>
+    <string name="title_mycode">My Code</string>
+    <string name="title_scancode">Scan Code</string>
 
 </resources>

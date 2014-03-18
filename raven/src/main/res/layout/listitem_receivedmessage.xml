@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="@drawable/chat_bubble_blue"
+        android:background="@drawable/chat_bubble_white"
         android:padding="@dimen/chatbubble_surrounding_padding">
 
         <TextView
@@ -33,6 +33,7 @@
             android:id="@+id/textView_timestamp"
             android:layout_alignParentRight="true"
             android:textColor="@color/color_timestamp"
-            android:layout_below="@id/textView_message"/>
+            android:layout_below="@id/textView_message"
+            android:paddingBottom="@dimen/elements_bottom_margin"/>
     </RelativeLayout>
 </RelativeLayout>

@@ -24,6 +24,11 @@
         <activity
             android:name="com.sumitgouthaman.raven.ChatThreadActivity"
             android:label="@string/title_activity_chat_thread"
+            android:parentActivityName="com.sumitgouthaman.raven.MessageListActivity" >
+        </activity>
+        <activity
+            android:name="com.sumitgouthaman.raven.AddContactActivity"
+            android:label="@string/title_activity_add_contact"
             android:parentActivityName="com.sumitgouthaman.raven.MessageListActivity">
         </activity>
     </application>
