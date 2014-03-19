@@ -1,21 +1,28 @@
 package com.sumitgouthaman.raven;
 
-import java.util.Locale;
-
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
+
+import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.StringToQRBitmap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Locale;
 
 
 public class AddContactActivity extends ActionBarActivity implements ActionBar.TabListener {
@@ -71,14 +78,15 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
             actionBar.addTab(
                     actionBar.newTab()
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setTabListener(this));
+                            .setTabListener(this)
+            );
         }
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_contact, menu);
         return true;
@@ -174,10 +182,10 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
 
             int layout = 0;
-            switch(getArguments().getInt(ARG_SECTION_NUMBER)){
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
                 case 1:
                     layout = R.layout.fragment_add_contact_mycode;
                     break;
@@ -187,8 +195,29 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
             }
 
             View rootView = inflater.inflate(layout, container, false);
+
+            if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
+                displayMyCode(rootView);
+            }
+
             return rootView;
         }
-    }
 
+        public void displayMyCode(View rootView){
+            String userName = Persistence.getUsername(getActivity());
+            String privateKey = "AKJSFBSLKFJSLKJFSKJF45346";
+            String secretName = "sdkgfsdkgjsdkg";
+            JSONObject ob = new JSONObject();
+            try {
+                ob.put("USERNAME", userName);
+                ob.put("PRIVATE_KEY", privateKey);
+                ob.put("SECRET_NAME", secretName);
+            }catch (JSONException je){
+                je.printStackTrace();
+            }
+            Bitmap bitmap = StringToQRBitmap.sting2QRBitmap(ob.toString());
+            ImageView imageview = (ImageView) rootView.findViewById(R.id.imageView_mycode);
+            imageview.setImageBitmap(bitmap);
+        }
+    }
 }

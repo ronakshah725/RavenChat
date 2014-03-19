@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sumitgouthaman.raven.ChatThreadActivity$PlaceholderFragment"
-    android:background="@color/color_chat_thread_background">
+    android:background="@color/color_chat_thread_background_black">
 
     <ListView
         android:layout_width="match_parent"

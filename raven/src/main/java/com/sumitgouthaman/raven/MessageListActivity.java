@@ -53,7 +53,7 @@ public class MessageListActivity extends ActionBarActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
-        }else if (id == R.id.action_addContact) {
+        } else if (id == R.id.action_addContact) {
             Intent intent = new Intent(this, AddContactActivity.class);
             startActivity(intent);
             return true;
