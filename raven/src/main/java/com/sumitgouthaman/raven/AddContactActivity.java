@@ -1,6 +1,8 @@
 package com.sumitgouthaman.raven;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.StringToQRBitmap;
@@ -198,12 +202,14 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
 
             if (getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
                 displayMyCode(rootView);
+            } else if (getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
+                displayScanCode(rootView);
             }
 
             return rootView;
         }
 
-        public void displayMyCode(View rootView){
+        public void displayMyCode(View rootView) {
             String userName = Persistence.getUsername(getActivity());
             String privateKey = "AKJSFBSLKFJSLKJFSKJF45346";
             String secretName = "sdkgfsdkgjsdkg";
@@ -212,12 +218,48 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                 ob.put("USERNAME", userName);
                 ob.put("PRIVATE_KEY", privateKey);
                 ob.put("SECRET_NAME", secretName);
-            }catch (JSONException je){
+            } catch (JSONException je) {
                 je.printStackTrace();
             }
             Bitmap bitmap = StringToQRBitmap.sting2QRBitmap(ob.toString());
             ImageView imageview = (ImageView) rootView.findViewById(R.id.imageView_mycode);
             imageview.setImageBitmap(bitmap);
+        }
+
+        public void displayScanCode(View rootView) {
+            ImageView imageview = (ImageView) rootView.findViewById(R.id.imageView_scanIcon);
+            imageview.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.scan1));
+            Button scanButton = (Button) rootView.findViewById(R.id.button_startScan);
+            scanButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                        intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // "PRODUCT_MODE for bar code
+                        startActivityForResult(intent, 0);
+                    } catch (Exception e) {
+                        Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
+                        Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+                        startActivity(marketIntent);
+
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 0) {
+
+                if (resultCode == RESULT_OK) {
+                    String contents = data.getStringExtra("SCAN_RESULT");
+                    Toast.makeText(getActivity(), contents, Toast.LENGTH_LONG).show();
+                }
+                if (resultCode == RESULT_CANCELED) {
+                    //handle cancel
+                }
+            }
         }
     }
 }

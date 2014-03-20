@@ -12,4 +12,6 @@
     <dimen name="listitems_topbottom_margin">5dp</dimen>
     <dimen name="chatbubble_surrounding_padding">10dp</dimen>
     <dimen name="chatbubble_indented_padding">50dp</dimen>
+    <dimen name="startscanbuttonpadding">20dp</dimen>
+    <dimen name="startscanbutton_top_margin">50dp</dimen>
 </resources>

@@ -25,5 +25,6 @@
     <string name="title_activity_add_contact">Add Contact</string>
     <string name="title_mycode">My Code</string>
     <string name="title_scancode">Scan Code</string>
+    <string name="start_scan">Start Scan</string>
 
 </resources>
