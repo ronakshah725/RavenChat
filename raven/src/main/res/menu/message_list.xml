@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sumitgouthaman.raven.MessageListActivity" >
-    
+
     <item android:id="@+id/action_addContact"
         android:title="@string/action_addContact"
         android:icon="@drawable/ic_action_add_person"

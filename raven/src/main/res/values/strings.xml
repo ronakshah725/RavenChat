@@ -26,5 +26,7 @@
     <string name="title_mycode">My Code</string>
     <string name="title_scancode">Scan Code</string>
     <string name="start_scan">Start Scan</string>
+    <string name="play_services_not_supported">Sorry, this device does not have Play Services installed!</string>
+    <string name="title_activity_debug">Debug Screen</string>
 
 </resources>

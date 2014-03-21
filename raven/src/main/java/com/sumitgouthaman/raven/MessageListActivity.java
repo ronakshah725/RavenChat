@@ -13,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sumitgouthaman.raven.listadapters.MessageListAdapter;
 import com.sumitgouthaman.raven.models.MessageListItem;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.CheckPlayServices;
 
 public class MessageListActivity extends ActionBarActivity {
 
@@ -24,6 +26,11 @@ public class MessageListActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_list);
+
+        if (!CheckPlayServices.check(this)) {
+            Toast.makeText(this, getString(R.string.play_services_not_supported), Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
