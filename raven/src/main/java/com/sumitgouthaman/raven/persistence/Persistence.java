@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 
 import com.sumitgouthaman.raven.R;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by sumit on 15/3/14.
  */
@@ -43,5 +46,36 @@ public class Persistence {
 
     public static String getAPIKey(Context context) {
         return context.getString(R.string.api_key);
+    }
+
+    public static String getDebugMessages(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, 0);
+        Set<String> debugMessages = shared.getStringSet("DEBUG_MESSAGES", null);
+        String debugTemp = "";
+        for (String dm : debugMessages) {
+            debugTemp = dm + ";;";
+        }
+        return debugTemp;
+    }
+
+    public static void addDebugMessages(Context context, String dm) {
+        SharedPreferences shared = context.getSharedPreferences(key, 0);
+        Set<String> debugMessages = shared.getStringSet("DEBUG_MESSAGES", new HashSet<String>());
+        debugMessages.add(dm);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putStringSet("DEBUG_MESSAGES", debugMessages);
+        editor.commit();
+    }
+
+    public static int getLastVersionNumber(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        return shared.getInt("LAST_VERSION", Integer.MIN_VALUE);
+    }
+
+    public static void setLastVersionNumber(Context context, int lastVersionNumber) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putInt("LAST_VERSION", lastVersionNumber);
+        editor.commit();
     }
 }

@@ -28,5 +28,7 @@
     <string name="start_scan">Start Scan</string>
     <string name="play_services_not_supported">Sorry, this device does not have Play Services installed!</string>
     <string name="title_activity_debug">Debug Screen</string>
+    <string name="registering_device">Registering Device...</string>
+    <string name="registration_completed">Registration Completed</string>
 
 </resources>
