@@ -2,4 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sumitgouthaman.raven.DebugActivity" >
+    <item android:id="@+id/action_clearDebugMessages"
+        android:title="@string/action_clearDebugMessages"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

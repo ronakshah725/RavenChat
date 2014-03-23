@@ -210,14 +210,11 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
         }
 
         public void displayMyCode(View rootView) {
-            String userName = Persistence.getUsername(getActivity());
-            String privateKey = "AKJSFBSLKFJSLKJFSKJF45346";
-            String secretName = "sdkgfsdkgjsdkg";
             JSONObject ob = new JSONObject();
             try {
-                ob.put("USERNAME", userName);
-                ob.put("PRIVATE_KEY", privateKey);
-                ob.put("SECRET_NAME", secretName);
+                ob.put("USERNAME", Persistence.getUsername(getActivity()));
+                ob.put("SECRET_USERNAME", Persistence.getSecretUsername(getActivity()));
+                ob.put("GCM_REG_ID", Persistence.getRegistrationID(getActivity()));
             } catch (JSONException je) {
                 je.printStackTrace();
             }

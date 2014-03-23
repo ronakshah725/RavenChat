@@ -30,5 +30,6 @@
     <string name="title_activity_debug">Debug Screen</string>
     <string name="registering_device">Registering Device...</string>
     <string name="registration_completed">Registration Completed</string>
+    <string name="action_clearDebugMessages">Clear Debug Messages</string>
 
 </resources>

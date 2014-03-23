@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.sumitgouthaman.raven.R;
+import com.sumitgouthaman.raven.utils.RandomStrings;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,20 @@ public class Persistence {
         SharedPreferences.Editor editor = shared.edit();
         editor.putString("USERNAME", username);
         editor.commit();
+    }
+
+    public static String getSecretUsername(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String secretUsername = shared.getString("SECRET_USERNAME", null);
+        if (secretUsername != null) {
+            return secretUsername;
+        } else {
+            secretUsername = new RandomStrings(20).nextString();
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString("SECRET_USERNAME", secretUsername);
+            editor.commit();
+            return secretUsername;
+        }
     }
 
     public static String getRegistrationID(Context context) {
@@ -50,20 +65,31 @@ public class Persistence {
 
     public static String getDebugMessages(Context context) {
         SharedPreferences shared = context.getSharedPreferences(key, 0);
-        Set<String> debugMessages = shared.getStringSet("DEBUG_MESSAGES", null);
+        String debugMessages = shared.getString("DEBUG_MESSAGES", null);
         String debugTemp = "";
-        for (String dm : debugMessages) {
-            debugTemp = dm + ";;";
-        }
+        if (debugMessages != null)
+            debugTemp = debugMessages;
         return debugTemp;
     }
 
     public static void addDebugMessages(Context context, String dm) {
         SharedPreferences shared = context.getSharedPreferences(key, 0);
-        Set<String> debugMessages = shared.getStringSet("DEBUG_MESSAGES", new HashSet<String>());
-        debugMessages.add(dm);
+        String debugMessages = "";
+        try {
+            debugMessages = shared.getString("DEBUG_MESSAGES", "");
+        } catch (ClassCastException cce) {
+            debugMessages = "";
+        }
+        debugMessages += "\n\n" + (dm);
         SharedPreferences.Editor editor = shared.edit();
-        editor.putStringSet("DEBUG_MESSAGES", debugMessages);
+        editor.putString("DEBUG_MESSAGES", debugMessages);
+        editor.commit();
+    }
+
+    public static void clearDebugMessages(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, 0);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("DEBUG_MESSAGES", "");
         editor.commit();
     }
 

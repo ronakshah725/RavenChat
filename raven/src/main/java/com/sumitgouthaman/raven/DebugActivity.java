@@ -1,5 +1,6 @@
 package com.sumitgouthaman.raven;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -7,6 +8,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.sumitgouthaman.raven.persistence.Persistence;
+
+import java.util.Set;
 
 
 public class DebugActivity extends ActionBarActivity {
@@ -21,6 +24,10 @@ public class DebugActivity extends ActionBarActivity {
         if (regID != null) {
             registrationID.setText(regID);
         }
+        String debugMessages = Persistence.getDebugMessages(this);
+        debugMessages = "START:" + debugMessages + "\n:END";
+        TextView debugMessagesField = (TextView) findViewById(R.id.textView_DebugMessages);
+        debugMessagesField.setText(debugMessages);
     }
 
 
@@ -38,7 +45,11 @@ public class DebugActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == 0) {
+        if (id == R.id.action_clearDebugMessages) {
+            Persistence.clearDebugMessages(this);
+            Intent intent = new Intent(this, DebugActivity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

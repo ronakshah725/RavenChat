@@ -32,8 +32,24 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Not Found"
                 android:id = "@+id/textView_RegistrationID"
+                android:layout_marginBottom="@dimen/elements_bottom_margin"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Debug Messages"
                 android:layout_marginBottom="@dimen/elements_bottom_margin"/>
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Not Found"
+                android:id = "@+id/textView_DebugMessages"
+                android:layout_marginBottom="@dimen/elements_bottom_margin"/>
+        </LinearLayout>
+
     </ScrollView>
 
 </RelativeLayout>
