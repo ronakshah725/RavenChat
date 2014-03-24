@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.sumitgouthaman.raven.R;
+import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.utils.RandomStrings;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -102,6 +107,51 @@ public class Persistence {
         SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putInt("LAST_VERSION", lastVersionNumber);
+        editor.commit();
+    }
+
+    public static void addNewContact(Context context, Contact newContact) {
+        SharedPreferences shared = context.getSharedPreferences(key, 0);
+        String contactsStr = shared.getString("CONTACTS", "[]");
+        try {
+            JSONArray contactsArr = new JSONArray(contactsStr);
+            JSONObject newContactOb = new JSONObject();
+            newContactOb.put("username", newContact.username);
+            newContactOb.put("secretUsername", newContact.secretUsername);
+            newContactOb.put("registrationID", newContact.registrationID);
+            contactsArr.put(newContactOb);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString("CONTACTS", contactsArr.toString());
+            editor.commit();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
+    public static Contact[] getContacts(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, 0);
+        String contactsStr = shared.getString("CONTACTS", "[]");
+        try {
+            JSONArray contactsArr = new JSONArray(contactsStr);
+            Contact[] contacts = new Contact[contactsArr.length()];
+            for (int i = 0; i < contacts.length; i++) {
+                contacts[i] = new Contact();
+                JSONObject contactOb = contactsArr.getJSONObject(i);
+                contacts[i].username = contactOb.getString("username");
+                contacts[i].secretUsername = contactOb.getString("secretUsername");
+                contacts[i].registrationID = contactOb.getString("registrationID");
+            }
+            return contacts;
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        return new Contact[0];
+    }
+
+    public static void clearContacts(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("CONTACTS", "[]");
         editor.commit();
     }
 }

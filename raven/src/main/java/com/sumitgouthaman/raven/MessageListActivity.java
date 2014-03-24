@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.sumitgouthaman.raven.listadapters.MessageListAdapter;
+import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.MessageListItem;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.CheckPlayServices;
@@ -104,11 +105,11 @@ public class MessageListActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_message_list, container, false);
-
-            MessageListItem[] messages = new MessageListItem[10];
-            for (int i = 0; i < 10; i++) {
+            Contact[] contacts = Persistence.getContacts(getActivity());
+            MessageListItem[] messages = new MessageListItem[contacts.length];
+            for (int i = 0; i < messages.length; i++) {
                 messages[i] = new MessageListItem();
-                messages[i].contactName = "Contact " + (i + 1);
+                messages[i].contactName = contacts[i].username;
                 messages[i].messagePreview = "This is a long message sent by contact " + (i + 1);
             }
 

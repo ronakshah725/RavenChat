@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.StringToQRBitmap;
 
@@ -251,7 +252,18 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
 
                 if (resultCode == RESULT_OK) {
                     String contents = data.getStringExtra("SCAN_RESULT");
-                    Toast.makeText(getActivity(), contents, Toast.LENGTH_LONG).show();
+                    try {
+                        JSONObject contactOb = new JSONObject(contents);
+                        Contact newContact = new Contact();
+                        newContact.username = contactOb.getString("USERNAME");
+                        newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
+                        newContact.registrationID = contactOb.getString("GCM_REG_ID");
+                        Persistence.addNewContact(getActivity(), newContact);
+                        Toast.makeText(getActivity(), getString(R.string.contact_added), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException je) {
+                        je.printStackTrace();
+                        Toast.makeText(getActivity(), getString(R.string.qr_error), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 if (resultCode == RESULT_CANCELED) {
                     //handle cancel

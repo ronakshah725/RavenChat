@@ -23,5 +23,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView" />
+        android:layout_below="@+id/textView"
+        android:layout_marginBottom="@dimen/elements_bottom_margin"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/clear_contacts"
+        android:id="@+id/button_clearContacts"
+        android:layout_below="@+id/editText_settings_username"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

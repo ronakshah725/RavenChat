@@ -31,5 +31,9 @@
     <string name="registering_device">Registering Device...</string>
     <string name="registration_completed">Registration Completed</string>
     <string name="action_clearDebugMessages">Clear Debug Messages</string>
+    <string name="clear_contacts">Clear Contacts</string>
+    <string name="contacts_cleared">Contacts cleared</string>
+    <string name="qr_error">Error in QR code</string>
+    <string name="contact_added">Contact added</string>
 
 </resources>
