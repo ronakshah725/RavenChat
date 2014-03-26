@@ -5,49 +5,51 @@
     tools:context="com.sumitgouthaman.raven.DebugActivity">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scrollView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/activity_vertical_margin"
+            android:orientation="vertical"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="@dimen/elements_bottom_margin"
                 android:text="Registration ID"
-                android:layout_marginBottom="@dimen/elements_bottom_margin"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
             <TextView
+                android:id="@+id/textView_RegistrationID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Not Found"
-                android:id = "@+id/textView_RegistrationID"
                 android:layout_marginBottom="@dimen/elements_bottom_margin"
+                android:text="Not Found"
+                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textIsSelectable="true" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="@dimen/elements_bottom_margin"
                 android:text="Debug Messages"
-                android:layout_marginBottom="@dimen/elements_bottom_margin"/>
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
             <TextView
+                android:id="@+id/textView_DebugMessages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginBottom="@dimen/elements_bottom_margin"
                 android:text="Not Found"
-                android:id = "@+id/textView_DebugMessages"
-                android:layout_marginBottom="@dimen/elements_bottom_margin"/>
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 
     </ScrollView>

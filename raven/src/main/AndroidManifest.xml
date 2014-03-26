@@ -55,6 +55,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.sumitgouthaman.raven.DispatchGCMMessage"
+            android:label="@string/title_activity_dispatch_gcmmessage" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

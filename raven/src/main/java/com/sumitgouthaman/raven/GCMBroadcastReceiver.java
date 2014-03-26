@@ -10,6 +10,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class GCMBroadcastReceiver extends BroadcastReceiver {
     public GCMBroadcastReceiver() {
     }
@@ -42,13 +45,16 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // This loop represents the service doing some work.
+                String recd = extras.getString("data");
                 int recdMessageType = -1;
+                String recdMessageText = "----";
                 try {
-                    recdMessageType = Integer.parseInt(extras.getString("messageType"));
-                } catch (NumberFormatException nfe) {
+                    JSONObject data = new JSONObject(recd);
+                    recdMessageType = data.getInt("messageType");
+                    recdMessageText = data.getString("messageText");
+                } catch (JSONException nfe) {
                     Persistence.addDebugMessages(context, "Coundn't parse message type");
                 }
-                String recdMessageText = extras.getString("messageText");
                 if (recdMessageType == MessageTypes.DEBUG_MESSAGE) {
                     Persistence.addDebugMessages(context, "Received: " + "Message of type: " + recdMessageType + " => " + recdMessageText);
                 }

@@ -66,6 +66,12 @@ public class MessageListActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,7 +103,6 @@ public class MessageListActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-
         public PlaceholderFragment() {
         }
 
@@ -118,6 +123,11 @@ public class MessageListActivity extends ActionBarActivity {
             messagesList.setAdapter(mla);
 
             return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
         }
     }
 

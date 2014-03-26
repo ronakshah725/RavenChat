@@ -21,19 +21,19 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:paddingBottom="@dimen/elements_bottom_margin"
             android:text="@string/placeholder_messagepreview"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:paddingBottom="@dimen/elements_bottom_margin" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
+            android:id="@+id/textView_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/placeholder_timestamp"
-            android:id="@+id/textView_timestamp"
             android:layout_alignParentRight="true"
-            android:textColor="@color/color_timestamp"
             android:layout_below="@id/textView_message"
-            android:paddingBottom="@dimen/elements_bottom_margin"/>
+            android:paddingBottom="@dimen/elements_bottom_margin"
+            android:text="@string/placeholder_timestamp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/color_timestamp" />
     </RelativeLayout>
 </RelativeLayout>

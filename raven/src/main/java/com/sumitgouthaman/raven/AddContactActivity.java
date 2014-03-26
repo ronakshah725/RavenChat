@@ -260,6 +260,7 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                         newContact.registrationID = contactOb.getString("GCM_REG_ID");
                         Persistence.addNewContact(getActivity(), newContact);
                         Toast.makeText(getActivity(), getString(R.string.contact_added), Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
                     } catch (JSONException je) {
                         je.printStackTrace();
                         Toast.makeText(getActivity(), getString(R.string.qr_error), Toast.LENGTH_SHORT).show();
