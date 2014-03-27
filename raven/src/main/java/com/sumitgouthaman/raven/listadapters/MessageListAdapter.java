@@ -28,7 +28,7 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.listitem_messagelist, parent, false);
@@ -45,6 +45,8 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChatThreadActivity.class);
+                intent.putExtra("secretUsername", messageListItems[position].secretUsername);
+                intent.putExtra("registrationID", messageListItems[position].registrationID);
                 context.startActivity(intent);
             }
         });

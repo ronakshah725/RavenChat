@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_chat_thread_background_black"
+    android:background="@color/color_chat_thread_background"
     tools:context="com.sumitgouthaman.raven.ChatThreadActivity$PlaceholderFragment">
 
     <ListView
@@ -17,30 +17,26 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbarStyle="outsideOverlay" />
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/linearLayout_chatBox"
-        android:background="#ffffff"/>
     <LinearLayout
         android:id="@+id/linearLayout_chatBox"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:padding="@dimen/chatbubble_surrounding_padding">
+        android:padding="@dimen/messagearea_padding"
+        android:background="@color/white_opaque">
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/white"
-            android:capitalize="sentences"/>
+            android:capitalize="sentences"
+            android:id="@+id/editText_newMessageText"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send"
             android:layout_weight="0"
-            android:textColor="@color/white"/>
+            android:id="@+id/button_newMessageSend"/>
     </LinearLayout>
 </RelativeLayout>

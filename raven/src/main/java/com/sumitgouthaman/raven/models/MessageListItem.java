@@ -7,4 +7,6 @@ public class MessageListItem {
     public String contactName = "Contact Name";
     public String messagePreview = "This is a long message....";
     public boolean unread = false;
+    public String secretUsername = "";
+    public String registrationID = "";
 }

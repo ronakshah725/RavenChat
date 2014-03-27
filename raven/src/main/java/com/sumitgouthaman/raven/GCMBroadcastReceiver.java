@@ -1,15 +1,19 @@
 package com.sumitgouthaman.raven;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.sumitgouthaman.raven.models.Contact;
+import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.SimpleNotificationMaker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,10 +22,13 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
     public GCMBroadcastReceiver() {
     }
 
+    Context context;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
+        this.context = context;
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
         // The getMessageType() intent parameter must be the intent you received
@@ -58,6 +65,9 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                 }
                 if (recdMessageType == MessageTypes.DEBUG_MESSAGE) {
                     Persistence.addDebugMessages(context, "Received: " + "Message of type: " + recdMessageType + " => " + recdMessageText);
+                    PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                            new Intent(context, DebugActivity.class), 0);
+                    SimpleNotificationMaker.sendNotification(context, "Raven: DEBUG MESSAGE", recdMessageText, contentIntent);
                 } else if (recdMessageType == MessageTypes.PAIRING_MESSAGE) {
                     try {
                         JSONObject pairingRequest = new JSONObject(recdMessageText);
@@ -69,8 +79,34 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                } else if (recdMessageType == MessageTypes.MORNAL_MESSAGE) {
+                    try {
+                        JSONObject newMessage = new JSONObject(recdMessageText);
+                        String secretUsername = newMessage.getString("secretUsername");
+                        Message message = new Message();
+                        message.messageText = newMessage.getString("messageText");
+                        message.receivedMessage = true;
+                        message.timestamp = System.currentTimeMillis();
+                        Persistence.addMessage(context, secretUsername, message);
+                        Contact user = Persistence.getUsername(context, secretUsername);
+                        if (user != null) {
+                            String username = user.username;
+                            String userRegID = user.registrationID;
+                            Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
+                            chatThreadIntent.putExtra("secretUsername", secretUsername);
+                            chatThreadIntent.putExtra("registrationID", userRegID);
+                            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                                    chatThreadIntent, 0);
+                            SimpleNotificationMaker.sendNotification(context, context.getString(R.string.notif_title_messag_recd), username + ": " + message.messageText, contentIntent);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
+
+
 }

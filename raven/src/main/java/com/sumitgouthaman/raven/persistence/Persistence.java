@@ -6,14 +6,12 @@ import android.content.SharedPreferences;
 
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Contact;
+import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.utils.RandomStrings;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by sumit on 15/3/14.
@@ -148,10 +146,68 @@ public class Persistence {
         return new Contact[0];
     }
 
+    public static Contact getUsername(Context context, String secretUsername) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        Contact[] contacts = getContacts(context);
+        for (Contact c : contacts) {
+            if (c.secretUsername.equals(secretUsername)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
     public static void clearContacts(Context context) {
         SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
+        Contact[] contacts = getContacts(context);
+        for (Contact c : contacts) {
+            clearContactMessages(context, c.secretUsername);
+        }
         editor.putString("CONTACTS", "[]");
+        editor.commit();
+    }
+
+    public static Message[] getMessages(Context context, String secretUsername) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        try {
+            JSONArray messagesArr = new JSONArray(shared.getString(secretUsername, "[]"));
+            Message[] messages = new Message[messagesArr.length()];
+            for (int i = 0; i < messages.length; i++) {
+                messages[i] = new Message();
+                JSONObject messageOb = messagesArr.getJSONObject(i);
+                messages[i].messageText = messageOb.getString("MESSAGE_TEXT");
+                messages[i].receivedMessage = messageOb.getBoolean("RECD_MESSAGE");
+                messages[i].timestamp = messageOb.getLong("TIMESTAMP");
+            }
+            return messages;
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void addMessage(Context context, String secretUsername, Message message) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        try {
+            JSONArray messagesArr = new JSONArray(shared.getString(secretUsername, "[]"));
+            JSONObject messageOb = new JSONObject();
+            messageOb.put("MESSAGE_TEXT", message.messageText);
+            messageOb.put("RECD_MESSAGE", message.receivedMessage);
+            messageOb.put("TIMESTAMP", message.timestamp);
+            messagesArr.put(messageOb);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(secretUsername, messagesArr.toString());
+            editor.commit();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
+    public static void clearContactMessages(Context context, String secretUsername) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove(secretUsername);
         editor.commit();
     }
 }

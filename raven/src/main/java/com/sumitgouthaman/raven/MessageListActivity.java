@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,29 +41,29 @@ public class MessageListActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message_list);
-
-        context = getApplicationContext();
-
-        if (!CheckPlayServices.check(this)) {
-            Toast.makeText(this, getString(R.string.play_services_not_supported), Toast.LENGTH_LONG).show();
-            finish();
-        }
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-
-        initialCheck();
-
-        gcm = GoogleCloudMessaging.getInstance(this);
-        regid = getRegistrationId(context);
-
-        if (regid.isEmpty()) {
-            registerInBackground();
-        }
+//        setContentView(R.layout.activity_message_list);
+//
+//        context = getApplicationContext();
+//
+//        if (!CheckPlayServices.check(this)) {
+//            Toast.makeText(this, getString(R.string.play_services_not_supported), Toast.LENGTH_LONG).show();
+//            finish();
+//        }
+//
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.container, new PlaceholderFragment())
+//                    .commit();
+//        }
+//
+//        initialCheck();
+//
+//        gcm = GoogleCloudMessaging.getInstance(this);
+//        regid = getRegistrationId(context);
+//
+//        if (regid.isEmpty()) {
+//            registerInBackground();
+//        }
 
     }
 
@@ -139,6 +140,8 @@ public class MessageListActivity extends ActionBarActivity {
                 messages[i] = new MessageListItem();
                 messages[i].contactName = contacts[i].username;
                 messages[i].messagePreview = "This is a long message sent by contact " + (i + 1);
+                messages[i].secretUsername = contacts[i].secretUsername;
+                messages[i].registrationID = contacts[i].registrationID;
             }
 
             ListView messagesList = (ListView) rootView.findViewById(R.id.listView_MessageList);
@@ -161,6 +164,7 @@ public class MessageListActivity extends ActionBarActivity {
             alert.setTitle("Choose username");
             alert.setMessage(getResources().getString(R.string.message_username_not_set));
             final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
             alert.setView(input);
 
             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

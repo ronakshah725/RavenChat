@@ -3,7 +3,6 @@ package com.sumitgouthaman.raven.utils;
 import android.content.Context;
 
 import com.sumitgouthaman.raven.R;
-import com.sumitgouthaman.raven.models.MessageTypes;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,7 +14,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

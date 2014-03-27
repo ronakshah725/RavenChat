@@ -6,4 +6,5 @@
     <color name="color_chat_thread_background">#ffdddddd</color>
     <color name="color_chat_thread_background_black">#000</color>
     <color name="white">#fff</color>
+    <color name="white_opaque">#66ffffff</color>
 </resources>

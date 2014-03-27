@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import com.sumitgouthaman.raven.persistence.Persistence;
 
-import java.util.Set;
-
 
 public class DebugActivity extends ActionBarActivity {
 
