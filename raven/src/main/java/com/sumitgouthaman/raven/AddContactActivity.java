@@ -1,8 +1,10 @@
 package com.sumitgouthaman.raven;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +23,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.sumitgouthaman.raven.models.Contact;
+import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.MessageDispatcher;
 import com.sumitgouthaman.raven.utils.StringToQRBitmap;
 
 import org.json.JSONException;
@@ -259,8 +263,37 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                         newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
                         newContact.registrationID = contactOb.getString("GCM_REG_ID");
                         Persistence.addNewContact(getActivity(), newContact);
-                        Toast.makeText(getActivity(), getString(R.string.contact_added), Toast.LENGTH_SHORT).show();
-                        getActivity().finish();
+                        JSONObject pairingRequest = new JSONObject();
+                        pairingRequest.put("username", Persistence.getUsername(getActivity()));
+                        pairingRequest.put("secretUsername", Persistence.getSecretUsername(getActivity()));
+                        pairingRequest.put("registrationID", Persistence.getRegistrationID(getActivity()));
+                        final String pairingMessage = pairingRequest.toString();
+                        final String targetRegId = newContact.registrationID;
+                        final String targetName = newContact.username;
+                        new AsyncTask() {
+                            private ProgressDialog progressDialog;
+
+                            @Override
+                            protected Object doInBackground(Object[] objects) {
+                                return MessageDispatcher.dispatchMessage(getActivity(), targetRegId, MessageTypes.PAIRING_MESSAGE, pairingMessage);
+                            }
+
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                progressDialog = new ProgressDialog(getActivity());
+                                progressDialog.setMessage("Sending pairing request to " + targetName);
+                                progressDialog.show();
+
+                            }
+
+                            @Override
+                            protected void onPostExecute(Object o) {
+                                super.onPostExecute(o);
+                                progressDialog.dismiss();
+                                getActivity().finish();
+                            }
+                        }.execute(null, null, null);
                     } catch (JSONException je) {
                         je.printStackTrace();
                         Toast.makeText(getActivity(), getString(R.string.qr_error), Toast.LENGTH_SHORT).show();

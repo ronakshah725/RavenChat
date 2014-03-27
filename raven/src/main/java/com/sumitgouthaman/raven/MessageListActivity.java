@@ -69,6 +69,29 @@ public class MessageListActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setContentView(R.layout.activity_message_list);
+
+        context = getApplicationContext();
+
+        if (!CheckPlayServices.check(this)) {
+            Toast.makeText(this, getString(R.string.play_services_not_supported), Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        if (true) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, new PlaceholderFragment())
+                    .commit();
+        }
+
+        initialCheck();
+
+        gcm = GoogleCloudMessaging.getInstance(this);
+        regid = getRegistrationId(context);
+
+        if (regid.isEmpty()) {
+            registerInBackground();
+        }
 
     }
 

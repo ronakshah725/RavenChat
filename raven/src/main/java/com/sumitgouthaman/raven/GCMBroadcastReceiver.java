@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 
@@ -57,6 +58,17 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                 }
                 if (recdMessageType == MessageTypes.DEBUG_MESSAGE) {
                     Persistence.addDebugMessages(context, "Received: " + "Message of type: " + recdMessageType + " => " + recdMessageText);
+                } else if (recdMessageType == MessageTypes.PAIRING_MESSAGE) {
+                    try {
+                        JSONObject pairingRequest = new JSONObject(recdMessageText);
+                        Contact newContact = new Contact();
+                        newContact.username = pairingRequest.getString("username");
+                        newContact.secretUsername = pairingRequest.getString("secretUsername");
+                        newContact.registrationID = pairingRequest.getString("registrationID");
+                        Persistence.addNewContact(context, newContact);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

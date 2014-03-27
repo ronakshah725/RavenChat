@@ -34,7 +34,7 @@ public class MessageDispatcher {
             httpPost.addHeader("Authorization", "key=" + context.getString(R.string.api_key));
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             JSONObject data = new JSONObject();
-            data.put("messageType", MessageTypes.DEBUG_MESSAGE);
+            data.put("messageType", messageType);
             data.put("messageText", message);
             nameValuePairs.add(new BasicNameValuePair("data", data.toString()));
             nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
