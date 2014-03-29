@@ -13,12 +13,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Created by sumit on 15/3/14.
  */
 public class Persistence {
 
     private static final String key = "RAVEN";
+    private static final String[] persistenceKeys = {"USERNAME", "SECRET_USERNAME", "REGISTRATION_ID", "DEBUG_MESSAGES", "LAST_VERSION", "CONTACTS"};
 
     public static String getUsername(Activity activity) {
         SharedPreferences shared = activity.getSharedPreferences(key, 0);
@@ -146,7 +151,7 @@ public class Persistence {
         return new Contact[0];
     }
 
-    public static Contact getUsername(Context context, String secretUsername) {
+    public static Contact getUser(Context context, String secretUsername) {
         SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         Contact[] contacts = getContacts(context);
         for (Contact c : contacts) {
@@ -166,6 +171,28 @@ public class Persistence {
         }
         editor.putString("CONTACTS", "[]");
         editor.commit();
+    }
+
+    public static void clearContact(Context context, String secretUsername){
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String contactsStr = shared.getString("CONTACTS", "[]");
+        try {
+            JSONArray contactsArr = new JSONArray(contactsStr);
+            JSONArray newContactsArr = new JSONArray();
+            for (int i = 0; i < contactsArr.length(); i++) {
+                JSONObject contactOb = contactsArr.getJSONObject(i);
+                String targetSecretUsername = contactOb.getString("secretUsername");
+                if(!targetSecretUsername.equals(secretUsername)){
+                    newContactsArr.put(contactOb);
+                }
+            }
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString("CONTACTS", newContactsArr.toString());
+            editor.commit();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        cleanup(context);
     }
 
     public static Message[] getMessages(Context context, String secretUsername) {
@@ -209,5 +236,35 @@ public class Persistence {
         SharedPreferences.Editor editor = shared.edit();
         editor.remove(secretUsername);
         editor.commit();
+    }
+
+    public static String[] getAllKeys(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String[] temp = shared.getAll().keySet().toArray(new String[0]);
+        return temp;
+    }
+
+    public static void cleanup(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        Contact[] contacts = getContacts(context);
+        ArrayList<String> temp = new ArrayList<String>();
+        for (Contact c : contacts) {
+            temp.add(c.secretUsername);
+        }
+        String[] validSecrets = temp.toArray(new String[0]);
+        String[] storedKeys = getAllKeys(context);
+        temp.clear();
+        String persistenceKeysStr = Arrays.toString(persistenceKeys);
+        String validSecretsStr = Arrays.toString(validSecrets);
+        for (String k : storedKeys) {
+            if (!(persistenceKeysStr.contains(k) || validSecretsStr.contains(k))) {
+                temp.add(k);
+            }
+        }
+        for (String t : temp) {
+            SharedPreferences.Editor editor = shared.edit();
+            editor.remove(t);
+            editor.commit();
+        }
     }
 }

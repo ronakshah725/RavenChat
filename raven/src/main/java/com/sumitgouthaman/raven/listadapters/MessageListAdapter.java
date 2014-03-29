@@ -1,17 +1,22 @@
 package com.sumitgouthaman.raven.listadapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sumitgouthaman.raven.ChatThreadActivity;
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.MessageListItem;
+import com.sumitgouthaman.raven.persistence.Persistence;
 
 /**
  * Created by sumit on 10/3/14.
@@ -31,8 +36,8 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.listitem_messagelist, parent, false);
-        TextView contactNameField = (TextView) rowView.findViewById(R.id.textView_ContactName);
+        final View rowView = inflater.inflate(R.layout.listitem_messagelist, parent, false);
+        final TextView contactNameField = (TextView) rowView.findViewById(R.id.textView_ContactName);
         TextView messagePreviewField = (TextView) rowView.findViewById(R.id.textView_messagePreview);
 
         contactNameField.setText(messageListItems[position].contactName);
@@ -47,7 +52,33 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
                 Intent intent = new Intent(context, ChatThreadActivity.class);
                 intent.putExtra("secretUsername", messageListItems[position].secretUsername);
                 intent.putExtra("registrationID", messageListItems[position].registrationID);
+                intent.putExtra("contactName", messageListItems[position].contactName);
                 context.startActivity(intent);
+            }
+        });
+        rowView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage(context.getString(R.string.delete_contact) + ": " + messageListItems[position].contactName + "?")
+                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Persistence.clearContact(context, messageListItems[position].secretUsername);
+                                Toast.makeText(context, context.getString(R.string.contact_willbe_deleted), Toast.LENGTH_SHORT).show();
+                                rowView.setOnClickListener(null);
+                                contactNameField.setTextColor(context.getResources().getColor(R.color.color_messagePreview));
+                                contactNameField.setPaintFlags(contactNameField.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                            }
+                        })
+                        .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        })
+                        .setIcon(context.getResources().getDrawable(R.drawable.ic_launcher))
+                        .setTitle(R.string.dialogTitle_delete_contact);
+                // Create the AlertDialog object and return it
+                builder.show();
+                return true;
             }
         });
         return rowView;

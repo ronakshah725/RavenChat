@@ -38,5 +38,13 @@
     <string name="title_activity_dispatch_gcmmessage">DispatchGCMMessage</string>
     <string name="sent">Sent</string>
     <string name="notif_title_messag_recd">Message Received</string>
+    <string name="cleanup">Cleanup</string>
+    <string name="cleanup_decription">Clears up unused data</string>
+    <string name="ran_cleanup">Ran cleanup</string>
+    <string name="delete_contact">Delete Contact</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="dialogTitle_delete_contact">Remove Contact</string>
+    <string name="contact_willbe_deleted">Contact will be deleted on relaunch</string>
 
 </resources>

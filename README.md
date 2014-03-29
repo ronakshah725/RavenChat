@@ -9,3 +9,6 @@ Once the pairing is done they can communicate like any other chat app.
 In order to successfully run the project, you need to supply the SENDER_ID and API_KEY for using GCM.
 Follow the instructions given [here](http://developer.android.com/google/gcm/gs.html) to create the same.
 Add them as string resources named "sender_id" and "api_key" to your project.
+
+###License
+This work is licensed under the [MIT License](LICENSE.md).

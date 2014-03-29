@@ -16,7 +16,9 @@
         android:dividerHeight="0dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"/>
     <LinearLayout
         android:id="@+id/linearLayout_chatBox"
         android:layout_width="fill_parent"

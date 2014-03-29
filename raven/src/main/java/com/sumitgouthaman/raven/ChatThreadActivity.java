@@ -1,5 +1,6 @@
 package com.sumitgouthaman.raven;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,18 +30,25 @@ public class ChatThreadActivity extends ActionBarActivity {
 
     private static String secretUsername;
     private static String targetRegistrationID;
+    private static String contactName;
+    private static Message[] messages;
+    private static ListView messagesList;
+    private static ChatThreadAdapter cta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_thread);
+        secretUsername = getIntent().getStringExtra("secretUsername");
+        targetRegistrationID = getIntent().getStringExtra("registrationID");
+        contactName = getIntent().getStringExtra("contactName");
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        secretUsername = getIntent().getStringExtra("secretUsername");
-        targetRegistrationID = getIntent().getStringExtra("registrationID");
+
     }
 
 
@@ -77,10 +85,10 @@ public class ChatThreadActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_chat_thread, container, false);
 
-            Message[] messages = Persistence.getMessages(getActivity(), secretUsername);
+            messages = Persistence.getMessages(getActivity(), secretUsername);
 
-            ListView messagesList = (ListView) rootView.findViewById(R.id.listView_chatthread);
-            ChatThreadAdapter cta = new ChatThreadAdapter(getActivity(), messages);
+            messagesList = (ListView) rootView.findViewById(R.id.listView_chatthread);
+            cta = new ChatThreadAdapter(getActivity(), messages);
             messagesList.setAdapter(cta);
 
             final EditText newMessageField = (EditText) rootView.findViewById(R.id.editText_newMessageText);
@@ -127,11 +135,21 @@ public class ChatThreadActivity extends ActionBarActivity {
                             progressDialog.dismiss();
                             Toast.makeText(getActivity(), getString(R.string.sent), Toast.LENGTH_SHORT).show();
                             newMessageField.setText("");
+                            Message message = new Message();
+                            message.messageText = messageText;
+                            message.timestamp = System.currentTimeMillis();
+                            message.receivedMessage = false;
+                            Persistence.addMessage(getActivity(), secretUsername, message);
+                            messages = Persistence.getMessages(getActivity(), secretUsername);
+                            cta = new ChatThreadAdapter(getActivity(), messages);
+                            messagesList.setAdapter(cta);
                         }
                     }.execute(null, null, null);
                 }
             });
 
+            ActionBar ab = getActivity().getActionBar();
+            ab.setTitle(contactName);
             return rootView;
         }
     }

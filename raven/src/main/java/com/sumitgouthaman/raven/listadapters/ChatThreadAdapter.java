@@ -38,14 +38,14 @@ public class ChatThreadAdapter extends ArrayAdapter<Message> {
             rowView = inflater.inflate(R.layout.listitem_sentmessage, parent, false);
         }
         TextView messageField = (TextView) rowView.findViewById(R.id.textView_message);
-        TextView timestampField = (TextView) rowView.findViewById(R.id.textView_timestamp);
+        //TextView timestampField = (TextView) rowView.findViewById(R.id.textView_timestamp);
 
         DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(messages[position].timestamp);
 
         messageField.setText(messages[position].messageText);
-        timestampField.setText(formatter.format(calendar.getTime()));
+        //timestampField.setText(formatter.format(calendar.getTime()));
 
         return rowView;
     }

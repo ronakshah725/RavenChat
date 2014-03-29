@@ -1,6 +1,7 @@
 package com.sumitgouthaman.raven;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -26,6 +27,17 @@ public class DebugActivity extends ActionBarActivity {
         debugMessages = "START:" + debugMessages + "\n:END";
         TextView debugMessagesField = (TextView) findViewById(R.id.textView_DebugMessages);
         debugMessagesField.setText(debugMessages);
+        TextView storedKeys = (TextView) findViewById(R.id.textView_persistenceKeys);
+        String[] keys = Persistence.getAllKeys(this);
+        String keysStr = "";
+        for (String k : keys) {
+            keysStr += k + "\n";
+        }
+        storedKeys.setText(keysStr);
+//        SharedPreferences shared = getSharedPreferences("RAVEN", MODE_PRIVATE);
+//        storedKeys.setText(shared.getAll().toString());
+        TextView secretUsername = (TextView) findViewById(R.id.textView_secretUsername);
+        secretUsername.setText(Persistence.getSecretUsername(this));
     }
 
 

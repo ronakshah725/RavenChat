@@ -28,7 +28,8 @@
         <activity
             android:name="com.sumitgouthaman.raven.ChatThreadActivity"
             android:label="@string/title_activity_chat_thread"
-            android:parentActivityName="com.sumitgouthaman.raven.MessageListActivity" >
+            android:parentActivityName="com.sumitgouthaman.raven.MessageListActivity"
+            android:exported="true">
         </activity>
         <activity
             android:name="com.sumitgouthaman.raven.AddContactActivity"
@@ -58,11 +59,6 @@
         <activity
             android:name="com.sumitgouthaman.raven.DispatchGCMMessage"
             android:label="@string/title_activity_dispatch_gcmmessage" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 

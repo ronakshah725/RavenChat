@@ -3,17 +3,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/chatbubble_surrounding_padding"
-    android:paddingLeft="@dimen/chatbubble_surrounding_padding"
+    android:paddingLeft="@dimen/chatbubble_surrounding_padding_horizontal"
     android:paddingRight="@dimen/chatbubble_indented_padding"
-    android:paddingTop="@dimen/chatbubble_surrounding_padding">
+    android:paddingTop="@dimen/chatbubble_surrounding_padding_vertical">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:background="@drawable/chat_bubble_white"
-        android:padding="@dimen/chatbubble_surrounding_padding">
+        android:paddingLeft="@dimen/chatbubble_surrounding_padding_horizontal"
+        android:paddingRight="@dimen/chatbubble_surrounding_padding_horizontal"
+        android:paddingTop="@dimen/chatbubble_surrounding_padding_vertical"
+        android:paddingBottom="@dimen/chatbubble_surrounding_padding_vertical">
 
         <TextView
             android:id="@+id/textView_message"
@@ -24,16 +26,5 @@
             android:paddingBottom="@dimen/elements_bottom_margin"
             android:text="@string/placeholder_messagepreview"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/textView_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/textView_message"
-            android:paddingBottom="@dimen/elements_bottom_margin"
-            android:text="@string/placeholder_timestamp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/color_timestamp" />
     </RelativeLayout>
 </RelativeLayout>

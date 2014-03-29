@@ -1,5 +1,6 @@
 package com.sumitgouthaman.raven.utils;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,7 +25,9 @@ public class SimpleNotificationMaker {
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg)
-                        .setAutoCancel(true);
+                        .setAutoCancel(true)
+                        .setLights(0xffff0000, 300, 10000)
+                        .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());

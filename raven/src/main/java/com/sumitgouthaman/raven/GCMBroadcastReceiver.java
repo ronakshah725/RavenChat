@@ -1,12 +1,10 @@
 package com.sumitgouthaman.raven;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.sumitgouthaman.raven.models.Contact;
@@ -88,15 +86,16 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         message.receivedMessage = true;
                         message.timestamp = System.currentTimeMillis();
                         Persistence.addMessage(context, secretUsername, message);
-                        Contact user = Persistence.getUsername(context, secretUsername);
+                        Contact user = Persistence.getUser(context, secretUsername);
                         if (user != null) {
                             String username = user.username;
                             String userRegID = user.registrationID;
                             Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
                             chatThreadIntent.putExtra("secretUsername", secretUsername);
                             chatThreadIntent.putExtra("registrationID", userRegID);
+                            chatThreadIntent.putExtra("contactName", username);
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                                    chatThreadIntent, 0);
+                                    chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                             SimpleNotificationMaker.sendNotification(context, context.getString(R.string.notif_title_messag_recd), username + ": " + message.messageText, contentIntent);
                         }
 

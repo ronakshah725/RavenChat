@@ -33,6 +33,15 @@ public class SettingsActivity extends ActionBarActivity {
                 Toast.makeText(SettingsActivity.this, getString(R.string.contacts_cleared), Toast.LENGTH_SHORT).show();
             }
         });
+
+        Button cleanupButton = (Button)findViewById(R.id.button_cleanup);
+        cleanupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Persistence.cleanup(SettingsActivity.this);
+                Toast.makeText(SettingsActivity.this, getString(R.string.ran_cleanup), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
