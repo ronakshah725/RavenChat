@@ -2,6 +2,7 @@ package com.sumitgouthaman.raven;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,8 @@ public class ChatThreadActivity extends ActionBarActivity {
     private static ListView messagesList;
     private static ChatThreadAdapter cta;
 
+    GCMBroadcastReceiver receiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +52,18 @@ public class ChatThreadActivity extends ActionBarActivity {
                     .commit();
         }
 
+        receiver = new GCMBroadcastReceiver(false, this);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.google.android.c2dm.intent.RECEIVE");
+        filter.setPriority(2);
+        registerReceiver(receiver, filter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,5 +165,11 @@ public class ChatThreadActivity extends ActionBarActivity {
             ab.setTitle(contactName);
             return rootView;
         }
+    }
+
+    public void refreshThread(){
+        messages = Persistence.getMessages(this, secretUsername);
+        cta = new ChatThreadAdapter(this, messages);
+        messagesList.setAdapter(cta);
     }
 }

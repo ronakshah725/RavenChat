@@ -34,7 +34,7 @@ public class SettingsActivity extends ActionBarActivity {
             }
         });
 
-        Button cleanupButton = (Button)findViewById(R.id.button_cleanup);
+        Button cleanupButton = (Button) findViewById(R.id.button_cleanup);
         cleanupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

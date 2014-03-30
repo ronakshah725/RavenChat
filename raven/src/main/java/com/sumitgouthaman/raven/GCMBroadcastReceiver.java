@@ -12,12 +12,22 @@ import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.SimpleNotificationMaker;
+import com.sumitgouthaman.raven.utils.SimpleSoundNotificationMaker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GCMBroadcastReceiver extends BroadcastReceiver {
+    boolean fromActivity;
+    ChatThreadActivity chatThreadActivity;
+
     public GCMBroadcastReceiver() {
+        fromActivity = true;
+    }
+
+    public GCMBroadcastReceiver(boolean notify, ChatThreadActivity cta) {
+        this.fromActivity = notify;
+        this.chatThreadActivity = cta;
     }
 
     Context context;
@@ -65,7 +75,11 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     Persistence.addDebugMessages(context, "Received: " + "Message of type: " + recdMessageType + " => " + recdMessageText);
                     PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                             new Intent(context, DebugActivity.class), 0);
-                    SimpleNotificationMaker.sendNotification(context, "Raven: DEBUG MESSAGE", recdMessageText, contentIntent);
+                    if (fromActivity) {
+                        SimpleNotificationMaker.sendNotification(context, "Raven: DEBUG MESSAGE", recdMessageText, contentIntent);
+                    }else{
+                        SimpleSoundNotificationMaker.sendNotification(context);
+                    }
                 } else if (recdMessageType == MessageTypes.PAIRING_MESSAGE) {
                     try {
                         JSONObject pairingRequest = new JSONObject(recdMessageText);
@@ -96,7 +110,12 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             chatThreadIntent.putExtra("contactName", username);
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                            SimpleNotificationMaker.sendNotification(context, context.getString(R.string.notif_title_messag_recd), username + ": " + message.messageText, contentIntent);
+                            if (fromActivity) {
+                                SimpleNotificationMaker.sendNotification(context, context.getString(R.string.notif_title_messag_recd), username + ": " + message.messageText, contentIntent);
+                            }else{
+                                SimpleSoundNotificationMaker.sendNotification(context);
+                                chatThreadActivity.refreshThread();
+                            }
                         }
 
                     } catch (JSONException e) {
@@ -105,6 +124,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                 }
             }
         }
+        abortBroadcast();
     }
 
 

@@ -173,7 +173,7 @@ public class Persistence {
         editor.commit();
     }
 
-    public static void clearContact(Context context, String secretUsername){
+    public static void clearContact(Context context, String secretUsername) {
         SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         String contactsStr = shared.getString("CONTACTS", "[]");
         try {
@@ -182,7 +182,7 @@ public class Persistence {
             for (int i = 0; i < contactsArr.length(); i++) {
                 JSONObject contactOb = contactsArr.getJSONObject(i);
                 String targetSecretUsername = contactOb.getString("secretUsername");
-                if(!targetSecretUsername.equals(secretUsername)){
+                if (!targetSecretUsername.equals(secretUsername)) {
                     newContactsArr.put(contactOb);
                 }
             }
