@@ -46,5 +46,9 @@
     <string name="cancel">Cancel</string>
     <string name="dialogTitle_delete_contact">Remove Contact</string>
     <string name="contact_willbe_deleted">Contact will be deleted on relaunch</string>
+    <string name="sending">Sending...</string>
+    <string name="sending_unpairing">Unpairing...</string>
+    <string name="contact_unpaired">Contact Unpaired</string>
+    <string name="contact_has_unpaired">%s has unpaired from you</string>
 
 </resources>

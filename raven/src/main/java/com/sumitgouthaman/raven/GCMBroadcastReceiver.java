@@ -77,7 +77,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             new Intent(context, DebugActivity.class), 0);
                     if (fromActivity) {
                         SimpleNotificationMaker.sendNotification(context, "Raven: DEBUG MESSAGE", recdMessageText, contentIntent);
-                    }else{
+                    } else {
                         SimpleSoundNotificationMaker.sendNotification(context);
                     }
                 } else if (recdMessageType == MessageTypes.PAIRING_MESSAGE) {
@@ -112,7 +112,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                             if (fromActivity) {
                                 SimpleNotificationMaker.sendNotification(context, context.getString(R.string.notif_title_messag_recd), username + ": " + message.messageText, contentIntent);
-                            }else{
+                            } else {
                                 SimpleSoundNotificationMaker.sendNotification(context);
                                 chatThreadActivity.refreshThread();
                             }
@@ -120,6 +120,18 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }
+                } else if (recdMessageType == MessageTypes.REMOVE_CONTACT) {
+                    String toBeRemoved = recdMessageText;
+                    Contact user = Persistence.getUser(context, toBeRemoved);
+                    if (user != null) {
+                        String username = user.username;
+                        String notifMessage = String.format(context.getString(R.string.contact_has_unpaired), username);
+                        Intent messageListIntent = new Intent(context, MessageListActivity.class);
+                        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                                messageListIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_unpaired), notifMessage, contentIntent);
+                        Persistence.clearContact(context, toBeRemoved);
                     }
                 }
             }

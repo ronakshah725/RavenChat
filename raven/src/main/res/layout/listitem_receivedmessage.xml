@@ -25,6 +25,7 @@
             android:layout_alignParentTop="true"
             android:paddingBottom="@dimen/elements_bottom_margin"
             android:text="@string/placeholder_messagepreview"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textIsSelectable="true"/>
     </RelativeLayout>
 </RelativeLayout>

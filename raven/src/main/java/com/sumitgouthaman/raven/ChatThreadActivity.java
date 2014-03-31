@@ -137,7 +137,7 @@ public class ChatThreadActivity extends ActionBarActivity {
                         protected void onPreExecute() {
                             super.onPreExecute();
                             progressDialog = new ProgressDialog(getActivity());
-                            progressDialog.setMessage("Sending....");
+                            progressDialog.setMessage(getString(R.string.sending));
                             progressDialog.show();
 
                         }

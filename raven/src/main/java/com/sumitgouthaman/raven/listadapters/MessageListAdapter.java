@@ -1,11 +1,13 @@
 package com.sumitgouthaman.raven.listadapters;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,14 @@ import android.widget.Toast;
 
 import com.sumitgouthaman.raven.ChatThreadActivity;
 import com.sumitgouthaman.raven.R;
+import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageListItem;
+import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.MessageDispatcher;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by sumit on 10/3/14.
@@ -25,11 +33,13 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
 
     private final Context context;
     private final MessageListItem[] messageListItems;
+    private final String mySecretUsername;
 
     public MessageListAdapter(Context context, MessageListItem[] messageListItems) {
         super(context, R.layout.listitem_messagelist, messageListItems);
         this.context = context;
         this.messageListItems = messageListItems;
+        this.mySecretUsername = Persistence.getSecretUsername(context);
     }
 
     @Override
@@ -63,11 +73,33 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
                 builder.setMessage(context.getString(R.string.delete_contact) + ": " + messageListItems[position].contactName + "?")
                         .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Persistence.clearContact(context, messageListItems[position].secretUsername);
-                                Toast.makeText(context, context.getString(R.string.contact_willbe_deleted), Toast.LENGTH_SHORT).show();
-                                rowView.setOnClickListener(null);
-                                contactNameField.setTextColor(context.getResources().getColor(R.color.color_messagePreview));
-                                contactNameField.setPaintFlags(contactNameField.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                                new AsyncTask() {
+                                    private ProgressDialog progressDialog;
+
+                                    @Override
+                                    protected Object doInBackground(Object[] objects) {
+                                        return MessageDispatcher.dispatchMessage(context, messageListItems[position].registrationID, MessageTypes.REMOVE_CONTACT, mySecretUsername);
+                                    }
+
+                                    @Override
+                                    protected void onPreExecute() {
+                                        super.onPreExecute();
+                                        progressDialog = new ProgressDialog(context);
+                                        progressDialog.setMessage(context.getString(R.string.sending_unpairing));
+                                        progressDialog.show();
+
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Object o) {
+                                        super.onPostExecute(o);
+                                        progressDialog.dismiss();
+                                        rowView.setOnClickListener(null);
+                                        contactNameField.setTextColor(context.getResources().getColor(R.color.color_messagePreview));
+                                        contactNameField.setPaintFlags(contactNameField.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                                        Persistence.clearContact(context, messageListItems[position].secretUsername);
+                                    }
+                                }.execute(null, null, null);
                             }
                         })
                         .setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
