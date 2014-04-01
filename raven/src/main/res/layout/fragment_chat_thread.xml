@@ -25,8 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:padding="@dimen/messagearea_padding"
-        android:background="@color/white_opaque">
+        android:paddingLeft="@dimen/messagearea_padding"
+        android:paddingRight="@dimen/messagearea_padding"
+        android:background="@color/white_opaque"
+        android:gravity="center_vertical">
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -34,11 +36,19 @@
             android:capitalize="sentences"
             android:id="@+id/editText_newMessageText"/>
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send"
+            android:id="@+id/button_newMessageSend"
             android:layout_weight="0"
-            android:id="@+id/button_newMessageSend"/>
+            android:background="@drawable/ic_action_send_now"/>
+
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Send"-->
+            <!--android:layout_weight="0"-->
+            <!--android:id="@+id/button_newMessageSend"/>-->
+
     </LinearLayout>
 </RelativeLayout>

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/chatbubble_indented_padding"
-    android:paddingRight="@dimen/chatbubble_surrounding_padding_horizontal"
     android:paddingTop="@dimen/chatbubble_surrounding_padding_vertical">
 
     <RelativeLayout

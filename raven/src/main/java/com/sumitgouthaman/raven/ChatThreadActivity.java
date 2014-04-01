@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -105,7 +106,7 @@ public class ChatThreadActivity extends ActionBarActivity {
             messagesList.setAdapter(cta);
 
             final EditText newMessageField = (EditText) rootView.findViewById(R.id.editText_newMessageText);
-            final Button newMessageSendButton = (Button) rootView.findViewById(R.id.button_newMessageSend);
+            final ImageButton newMessageSendButton = (ImageButton) rootView.findViewById(R.id.button_newMessageSend);
 
             newMessageSendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
