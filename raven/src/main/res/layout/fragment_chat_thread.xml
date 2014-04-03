@@ -18,37 +18,31 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbarStyle="outsideOverlay"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"/>
+        android:transcriptMode="alwaysScroll" />
+
     <LinearLayout
         android:id="@+id/linearLayout_chatBox"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="@color/white_opaque"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/messagearea_padding"
-        android:paddingRight="@dimen/messagearea_padding"
-        android:background="@color/white_opaque"
-        android:gravity="center_vertical">
+        android:paddingRight="@dimen/messagearea_padding">
+
         <EditText
+            android:id="@+id/editText_newMessageText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:capitalize="sentences"
-            android:id="@+id/editText_newMessageText"/>
+            android:capitalize="sentences" />
 
         <ImageButton
+            android:id="@+id/button_newMessageSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button_newMessageSend"
             android:layout_weight="0"
-            android:background="@drawable/ic_action_send_now"/>
-
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Send"-->
-            <!--android:layout_weight="0"-->
-            <!--android:id="@+id/button_newMessageSend"/>-->
-
+            android:background="@drawable/ic_action_send_now" />
     </LinearLayout>
 </RelativeLayout>

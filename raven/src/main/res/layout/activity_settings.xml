@@ -33,8 +33,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/editText_settings_username"
-        android:text="@string/clear_contacts"
-        android:layout_marginBottom="@dimen/elements_bottom_margin"/>
+        android:layout_marginBottom="@dimen/elements_bottom_margin"
+        android:text="@string/clear_contacts" />
+
     <Button
         android:id="@+id/button_cleanup"
         android:layout_width="match_parent"
@@ -42,14 +43,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/button_clearContacts"
-        android:text="@string/cleanup"/>
+        android:text="@string/cleanup" />
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/cleanup_decription"
-        android:id="@+id/textView2"
         android:layout_below="@+id/button_cleanup"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="@string/cleanup_decription"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 </RelativeLayout>

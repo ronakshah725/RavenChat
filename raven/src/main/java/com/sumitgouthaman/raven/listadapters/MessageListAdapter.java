@@ -34,6 +34,12 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
     private final Context context;
     private final MessageListItem[] messageListItems;
     private final String mySecretUsername;
+    private String prepopulatedMessage = null;
+
+    public MessageListAdapter(Context context, MessageListItem[] messageListItems, String prepopulatedMessage) {
+        this(context, messageListItems);
+        this.prepopulatedMessage = prepopulatedMessage;
+    }
 
     public MessageListAdapter(Context context, MessageListItem[] messageListItems) {
         super(context, R.layout.listitem_messagelist, messageListItems);
@@ -63,6 +69,9 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
                 intent.putExtra("secretUsername", messageListItems[position].secretUsername);
                 intent.putExtra("registrationID", messageListItems[position].registrationID);
                 intent.putExtra("contactName", messageListItems[position].contactName);
+                if (prepopulatedMessage != null) {
+                    intent.putExtra("prepopulatedMessage", prepopulatedMessage);
+                }
                 context.startActivity(intent);
             }
         });

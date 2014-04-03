@@ -20,6 +20,7 @@ import org.json.JSONObject;
 public class GCMBroadcastReceiver extends BroadcastReceiver {
     boolean fromActivity;
     ChatThreadActivity chatThreadActivity;
+    Context context;
 
     public GCMBroadcastReceiver() {
         fromActivity = true;
@@ -29,8 +30,6 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
         this.fromActivity = notify;
         this.chatThreadActivity = cta;
     }
-
-    Context context;
 
     @Override
     public void onReceive(Context context, Intent intent) {

@@ -38,6 +38,20 @@ public class MessageListActivity extends ActionBarActivity {
 
     String TAG = "RAVEN";
 
+    /**
+     * @return Application's version code from the {@code PackageManager}.
+     */
+    private static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +110,6 @@ public class MessageListActivity extends ActionBarActivity {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -121,40 +134,6 @@ public class MessageListActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_message_list, container, false);
-            Contact[] contacts = Persistence.getContacts(getActivity());
-            MessageListItem[] messages = new MessageListItem[contacts.length];
-            for (int i = 0; i < messages.length; i++) {
-                messages[i] = new MessageListItem();
-                messages[i].contactName = contacts[i].username;
-                messages[i].messagePreview = "This is a long message sent by contact " + (i + 1);
-                messages[i].secretUsername = contacts[i].secretUsername;
-                messages[i].registrationID = contacts[i].registrationID;
-            }
-
-            ListView messagesList = (ListView) rootView.findViewById(R.id.listView_MessageList);
-            MessageListAdapter mla = new MessageListAdapter(getActivity(), messages);
-            messagesList.setAdapter(mla);
-
-            return rootView;
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-        }
     }
 
     public void initialCheck() {
@@ -211,20 +190,6 @@ public class MessageListActivity extends ActionBarActivity {
     }
 
     /**
-     * @return Application's version code from the {@code PackageManager}.
-     */
-    private static int getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
-
-    /**
      * Registers the application with GCM servers asynchronously.
      * <p/>
      * Stores the registration ID and app versionCode in the application's
@@ -267,6 +232,40 @@ public class MessageListActivity extends ActionBarActivity {
                 Toast.makeText(context, getString(R.string.registration_completed), Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
+    }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_message_list, container, false);
+            Contact[] contacts = Persistence.getContacts(getActivity());
+            MessageListItem[] messages = new MessageListItem[contacts.length];
+            for (int i = 0; i < messages.length; i++) {
+                messages[i] = new MessageListItem();
+                messages[i].contactName = contacts[i].username;
+                messages[i].messagePreview = "This is a long message sent by contact " + (i + 1);
+                messages[i].secretUsername = contacts[i].secretUsername;
+                messages[i].registrationID = contacts[i].registrationID;
+            }
+
+            ListView messagesList = (ListView) rootView.findViewById(R.id.listView_MessageList);
+            MessageListAdapter mla = new MessageListAdapter(getActivity(), messages);
+            messagesList.setAdapter(mla);
+
+            return rootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+        }
     }
 
 }

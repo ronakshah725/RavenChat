@@ -33,6 +33,7 @@ public class ChatThreadActivity extends ActionBarActivity {
     private static String secretUsername;
     private static String targetRegistrationID;
     private static String contactName;
+    private static String prepopulatedMessage;
     private static Message[] messages;
     private static ListView messagesList;
     private static ChatThreadAdapter cta;
@@ -46,6 +47,7 @@ public class ChatThreadActivity extends ActionBarActivity {
         secretUsername = getIntent().getStringExtra("secretUsername");
         targetRegistrationID = getIntent().getStringExtra("registrationID");
         contactName = getIntent().getStringExtra("contactName");
+        prepopulatedMessage = getIntent().getStringExtra("prepopulatedMessage");
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -86,6 +88,12 @@ public class ChatThreadActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void refreshThread() {
+        messages = Persistence.getMessages(this, secretUsername);
+        cta = new ChatThreadAdapter(this, messages);
+        messagesList.setAdapter(cta);
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -107,6 +115,10 @@ public class ChatThreadActivity extends ActionBarActivity {
 
             final EditText newMessageField = (EditText) rootView.findViewById(R.id.editText_newMessageText);
             final ImageButton newMessageSendButton = (ImageButton) rootView.findViewById(R.id.button_newMessageSend);
+
+            if (prepopulatedMessage != null) {
+                newMessageField.setText(prepopulatedMessage);
+            }
 
             newMessageSendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -166,11 +178,5 @@ public class ChatThreadActivity extends ActionBarActivity {
             ab.setTitle(contactName);
             return rootView;
         }
-    }
-
-    public void refreshThread(){
-        messages = Persistence.getMessages(this, secretUsername);
-        cta = new ChatThreadAdapter(this, messages);
-        messagesList.setAdapter(cta);
     }
 }
