@@ -250,7 +250,10 @@ public class MessageListActivity extends ActionBarActivity {
             for (int i = 0; i < messages.length; i++) {
                 messages[i] = new MessageListItem();
                 messages[i].contactName = contacts[i].username;
-                messages[i].messagePreview = "This is a long message sent by contact " + (i + 1);
+                messages[i].messagePreview = "";
+                if (contacts[i].lastMessage != null) {
+                    messages[i].messagePreview = contacts[i].lastMessage.messageText;
+                }
                 messages[i].secretUsername = contacts[i].secretUsername;
                 messages[i].registrationID = contacts[i].registrationID;
             }

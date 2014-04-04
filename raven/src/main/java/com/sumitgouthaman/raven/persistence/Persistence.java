@@ -3,6 +3,7 @@ package com.sumitgouthaman.raven.persistence;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.provider.ContactsContract;
 
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Contact;
@@ -143,6 +144,7 @@ public class Persistence {
                 contacts[i].username = contactOb.getString("username");
                 contacts[i].secretUsername = contactOb.getString("secretUsername");
                 contacts[i].registrationID = contactOb.getString("registrationID");
+                contacts[i].lastMessage = getLastMessage(context, contacts[i].secretUsername);
             }
             return contacts;
         } catch (JSONException je) {
@@ -229,6 +231,25 @@ public class Persistence {
         } catch (JSONException je) {
             je.printStackTrace();
         }
+    }
+
+    public static Message getLastMessage(Context context, String secretUsername) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        try {
+            JSONArray messagesArr = new JSONArray(shared.getString(secretUsername, "[]"));
+            if (messagesArr.length() < 1) {
+                return null;
+            }
+            Message message = new Message();
+            JSONObject messageOb = messagesArr.getJSONObject(messagesArr.length() - 1);
+            message.messageText = messageOb.getString("MESSAGE_TEXT");
+            message.receivedMessage = messageOb.getBoolean("RECD_MESSAGE");
+            message.timestamp = messageOb.getLong("TIMESTAMP");
+            return message;
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        return null;
     }
 
     public static void clearContactMessages(Context context, String secretUsername) {

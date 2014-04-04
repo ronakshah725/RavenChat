@@ -22,5 +22,6 @@
         android:ellipsize="end"
         android:text="@string/placeholder_messagepreview"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_messagePreview" />
+        android:textColor="@color/color_messagePreview"
+        android:singleLine="true"/>
 </LinearLayout>

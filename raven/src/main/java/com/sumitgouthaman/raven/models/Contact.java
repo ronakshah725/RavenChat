@@ -7,4 +7,5 @@ public class Contact {
     public String username;
     public String secretUsername;
     public String registrationID;
+    public Message lastMessage = null;
 }
