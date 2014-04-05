@@ -47,4 +47,10 @@ public class ShareViaRaven extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
 }

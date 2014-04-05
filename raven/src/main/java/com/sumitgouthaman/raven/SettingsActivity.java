@@ -25,14 +25,14 @@ public class SettingsActivity extends ActionBarActivity {
         String username = Persistence.getUsername(this);
         usernameField.setText(username);
 
-        Button clearContactsButton = (Button) findViewById(R.id.button_clearContacts);
-        clearContactsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Persistence.clearContacts(SettingsActivity.this);
-                Toast.makeText(SettingsActivity.this, getString(R.string.contacts_cleared), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        Button clearContactsButton = (Button) findViewById(R.id.button_clearContacts);
+//        clearContactsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Persistence.clearContacts(SettingsActivity.this);
+//                Toast.makeText(SettingsActivity.this, getString(R.string.contacts_cleared), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         Button cleanupButton = (Button) findViewById(R.id.button_cleanup);
         cleanupButton.setOnClickListener(new View.OnClickListener() {

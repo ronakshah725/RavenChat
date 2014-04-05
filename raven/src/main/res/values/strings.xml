@@ -50,6 +50,6 @@
     <string name="sending_unpairing">Unpairing...</string>
     <string name="contact_unpaired">Contact Unpaired</string>
     <string name="contact_has_unpaired">%s has unpaired from you</string>
-    <string name="title_activity_share_via_raven">Share with Raven</string>
+    <string name="title_activity_share_via_raven">Select a contact</string>
 
 </resources>
