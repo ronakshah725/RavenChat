@@ -18,16 +18,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GCMBroadcastReceiver extends BroadcastReceiver {
-    boolean fromActivity;
+    boolean inBackground;
     ChatThreadActivity chatThreadActivity;
     Context context;
 
     public GCMBroadcastReceiver() {
-        fromActivity = true;
+        inBackground = true;
     }
 
     public GCMBroadcastReceiver(boolean notify, ChatThreadActivity cta) {
-        this.fromActivity = notify;
+        this.inBackground = notify;
         this.chatThreadActivity = cta;
     }
 
@@ -74,7 +74,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     Persistence.addDebugMessages(context, "Received: " + "Message of type: " + recdMessageType + " => " + recdMessageText);
                     PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                             new Intent(context, DebugActivity.class), 0);
-                    if (fromActivity) {
+                    if (inBackground) {
                         SimpleNotificationMaker.sendNotification(context, "Raven: DEBUG MESSAGE", recdMessageText, contentIntent);
                     } else {
                         SimpleSoundNotificationMaker.sendNotification(context);
@@ -109,11 +109,11 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             chatThreadIntent.putExtra("contactName", username);
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                            if (fromActivity) {
-                                SimpleNotificationMaker.sendNotification(context, context.getString(R.string.notif_title_messag_recd), username + ": " + message.messageText, contentIntent);
-                            } else {
+                            if (!inBackground && chatThreadActivity != null && chatThreadActivity.secretUsername.equals(secretUsername)) {
                                 SimpleSoundNotificationMaker.sendNotification(context);
                                 chatThreadActivity.refreshThread();
+                            } else {
+                                SimpleNotificationMaker.sendNotification(context, context.getString(R.string.notif_title_messag_recd), username + ": " + message.messageText, contentIntent);
                             }
                         }
 

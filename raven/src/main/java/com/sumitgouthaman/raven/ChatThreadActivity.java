@@ -30,7 +30,7 @@ import org.json.JSONObject;
 
 public class ChatThreadActivity extends ActionBarActivity {
 
-    private static String secretUsername;
+    public static String secretUsername;
     private static String targetRegistrationID;
     private static String contactName;
     private static String prepopulatedMessage;
@@ -149,18 +149,19 @@ public class ChatThreadActivity extends ActionBarActivity {
                         @Override
                         protected void onPreExecute() {
                             super.onPreExecute();
-                            progressDialog = new ProgressDialog(getActivity());
-                            progressDialog.setMessage(getString(R.string.sending));
-                            progressDialog.show();
+//                            progressDialog = new ProgressDialog(getActivity());
+//                            progressDialog.setMessage(getString(R.string.sending));
+//                            progressDialog.show();
+                            Toast.makeText(getActivity(), getString(R.string.sending), Toast.LENGTH_SHORT).show();
+                            newMessageField.setText("");
 
                         }
 
                         @Override
                         protected void onPostExecute(Object o) {
                             super.onPostExecute(o);
-                            progressDialog.dismiss();
+                            //progressDialog.dismiss();
                             Toast.makeText(getActivity(), getString(R.string.sent), Toast.LENGTH_SHORT).show();
-                            newMessageField.setText("");
                             Message message = new Message();
                             message.messageText = messageText;
                             message.timestamp = System.currentTimeMillis();
