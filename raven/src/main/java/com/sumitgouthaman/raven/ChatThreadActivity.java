@@ -127,6 +127,10 @@ public class ChatThreadActivity extends ActionBarActivity {
                     if (messageText.equals("")) {
                         return;
                     }
+                    if (messageText.length() > 1000) {
+                        Toast.makeText(getActivity(), R.string.message_length_exceeded, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     final String mySecretUsername = Persistence.getSecretUsername(getActivity());
                     final String toRegId = targetRegistrationID;
                     new AsyncTask() {
