@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sumitgouthaman.raven.listadapters.ChatThreadAdapter;
@@ -156,16 +157,17 @@ public class ChatThreadActivity extends ActionBarActivity {
 //                            progressDialog = new ProgressDialog(getActivity());
 //                            progressDialog.setMessage(getString(R.string.sending));
 //                            progressDialog.show();
-                            Toast.makeText(getActivity(), getString(R.string.sending), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), getString(R.string.sending), Toast.LENGTH_SHORT).show();
                             newMessageField.setText("");
-
+                            TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
+                            sendingMessage.setVisibility(View.VISIBLE);
                         }
 
                         @Override
                         protected void onPostExecute(Object o) {
                             super.onPostExecute(o);
                             //progressDialog.dismiss();
-                            Toast.makeText(getActivity(), getString(R.string.sent), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), getString(R.string.sent), Toast.LENGTH_SHORT).show();
                             Message message = new Message();
                             message.messageText = messageText;
                             message.timestamp = System.currentTimeMillis();
@@ -174,6 +176,8 @@ public class ChatThreadActivity extends ActionBarActivity {
                             messages = Persistence.getMessages(getActivity(), secretUsername);
                             cta = new ChatThreadAdapter(getActivity(), messages);
                             messagesList.setAdapter(cta);
+                            TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
+                            sendingMessage.setVisibility(View.INVISIBLE);
                         }
                     }.execute(null, null, null);
                 }

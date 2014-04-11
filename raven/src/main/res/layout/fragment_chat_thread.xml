@@ -45,4 +45,17 @@
             android:layout_weight="0"
             android:background="@drawable/ic_action_send_now" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/sending"
+        android:id="@+id/textView_sendingStatus"
+        android:layout_above="@+id/linearLayout_chatBox"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/color_timestamp"
+        android:background="@color/white_opaque"
+        android:textStyle="italic"
+        android:visibility="invisible"/>
 </RelativeLayout>
