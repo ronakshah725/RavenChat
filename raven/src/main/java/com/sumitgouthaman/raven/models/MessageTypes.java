@@ -8,4 +8,5 @@ public class MessageTypes {
     public static final int PAIRING_MESSAGE = 1;
     public static final int MORNAL_MESSAGE = 2;
     public static final int REMOVE_CONTACT = 3;
+    public static final int REGISTRATION_UPDATE = 4;
 }

@@ -140,6 +140,15 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_unpaired), notifMessage, contentIntent);
                         Persistence.clearContact(context, toBeRemoved);
                     }
+                } else if (recdMessageType == MessageTypes.REGISTRATION_UPDATE) {
+                    try {
+                        JSONObject registrationUpdateOb = new JSONObject(recdMessageText);
+                        String contactSecretUsername = registrationUpdateOb.getString("secretUsername");
+                        String newRegId = registrationUpdateOb.getString("registrationID");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
