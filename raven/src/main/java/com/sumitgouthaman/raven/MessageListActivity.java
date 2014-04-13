@@ -210,6 +210,7 @@ public class MessageListActivity extends ActionBarActivity {
 
                     // Persist the regID - no need to register again.
                     Persistence.setRegistrationID(context, regid);
+
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
                     // If there is an error, don't just keep trying to register.
@@ -228,8 +229,11 @@ public class MessageListActivity extends ActionBarActivity {
             @Override
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
-
-                Toast.makeText(context, getString(R.string.registration_completed), Toast.LENGTH_SHORT).show();
+                String msg = o.toString();
+                if (o.equals(""))
+                    Toast.makeText(context, getString(R.string.registration_completed), Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(context, getString(R.string.registration_error), Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
     }

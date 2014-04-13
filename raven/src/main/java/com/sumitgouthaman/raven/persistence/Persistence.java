@@ -289,14 +289,14 @@ public class Persistence {
         }
     }
 
-    public static void updateRegistrationID(Context context, String secretUsername, String newRegId){
+    public static void updateRegistrationID(Context context, String secretUsername, String newRegId) {
         SharedPreferences shared = context.getSharedPreferences(key, 0);
         String contactsStr = shared.getString("CONTACTS", "[]");
         try {
             JSONArray contactsArr = new JSONArray(contactsStr);
-            for(int i=0;i<contactsArr.length();i++){
+            for (int i = 0; i < contactsArr.length(); i++) {
                 JSONObject contactOb = contactsArr.getJSONObject(i);
-                if(contactOb.get("secretUsername").equals(secretUsername)){
+                if (contactOb.get("secretUsername").equals(secretUsername)) {
                     contactOb.put("registrationID", newRegId);
                     contactsArr.put(i, contactOb);
                     SharedPreferences.Editor editor = shared.edit();

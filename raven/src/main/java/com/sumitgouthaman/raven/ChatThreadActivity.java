@@ -135,8 +135,6 @@ public class ChatThreadActivity extends ActionBarActivity {
                     final String mySecretUsername = Persistence.getSecretUsername(getActivity());
                     final String toRegId = targetRegistrationID;
                     new AsyncTask() {
-                        private ProgressDialog progressDialog;
-
                         @Override
                         protected Object doInBackground(Object[] objects) {
                             JSONObject messageJSON = new JSONObject();
@@ -154,10 +152,6 @@ public class ChatThreadActivity extends ActionBarActivity {
                         @Override
                         protected void onPreExecute() {
                             super.onPreExecute();
-//                            progressDialog = new ProgressDialog(getActivity());
-//                            progressDialog.setMessage(getString(R.string.sending));
-//                            progressDialog.show();
-                            //Toast.makeText(getActivity(), getString(R.string.sending), Toast.LENGTH_SHORT).show();
                             newMessageField.setText("");
                             TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
                             sendingMessage.setVisibility(View.VISIBLE);
@@ -166,16 +160,19 @@ public class ChatThreadActivity extends ActionBarActivity {
                         @Override
                         protected void onPostExecute(Object o) {
                             super.onPostExecute(o);
-                            //progressDialog.dismiss();
-                            //Toast.makeText(getActivity(), getString(R.string.sent), Toast.LENGTH_SHORT).show();
-                            Message message = new Message();
-                            message.messageText = messageText;
-                            message.timestamp = System.currentTimeMillis();
-                            message.receivedMessage = false;
-                            Persistence.addMessage(getActivity(), secretUsername, message);
-                            messages = Persistence.getMessages(getActivity(), secretUsername);
-                            cta = new ChatThreadAdapter(getActivity(), messages);
-                            messagesList.setAdapter(cta);
+                            if (o != null) {
+                                Message message = new Message();
+                                message.messageText = messageText;
+                                message.timestamp = System.currentTimeMillis();
+                                message.receivedMessage = false;
+                                Persistence.addMessage(getActivity(), secretUsername, message);
+                                messages = Persistence.getMessages(getActivity(), secretUsername);
+                                cta = new ChatThreadAdapter(getActivity(), messages);
+                                messagesList.setAdapter(cta);
+                            } else {
+                                Toast.makeText(getActivity(), R.string.message_not_sent, Toast.LENGTH_SHORT).show();
+                                newMessageField.setText(messageText);
+                            }
                             TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
                             sendingMessage.setVisibility(View.INVISIBLE);
                         }

@@ -53,5 +53,7 @@
     <string name="title_activity_share_via_raven">Select a contact</string>
     <string name="message_length_exceeded">Message too long</string>
     <string name="contact_has_paired">%s has paired with you</string>
+    <string name="registration_error">Registration Error</string>
+    <string name="message_not_sent">Message could not be sent</string>
 
 </resources>
