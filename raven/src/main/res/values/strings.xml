@@ -55,5 +55,6 @@
     <string name="contact_has_paired">%s has paired with you</string>
     <string name="registration_error">Registration Error</string>
     <string name="message_not_sent">Message could not be sent</string>
+    <string name="cannot_add_yourself">Sorry, you cannot add yourself</string>
 
 </resources>

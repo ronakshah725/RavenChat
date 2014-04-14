@@ -222,6 +222,10 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                     String contents = data.getStringExtra("SCAN_RESULT");
                     try {
                         JSONObject contactOb = new JSONObject(contents);
+                        if (contactOb.getString("SECRET_USERNAME").equals(Persistence.getSecretUsername(getActivity()))) {
+                            Toast.makeText(getActivity(), R.string.cannot_add_yourself, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         Contact newContact = new Contact();
                         newContact.username = contactOb.getString("USERNAME");
                         newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
