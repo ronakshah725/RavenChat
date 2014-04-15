@@ -50,11 +50,20 @@
     <string name="sending_unpairing">Unpairing...</string>
     <string name="contact_unpaired">Contact Unpaired</string>
     <string name="contact_has_unpaired">%s has unpaired from you</string>
-    <string name="title_activity_share_via_raven">Select a contact</string>
+    <string name="title_activity_share_via_raven">Send a Raven</string>
     <string name="message_length_exceeded">Message too long</string>
     <string name="contact_has_paired">%s has paired with you</string>
     <string name="registration_error">Registration Error</string>
     <string name="message_not_sent">Message could not be sent</string>
     <string name="cannot_add_yourself">Sorry, you cannot add yourself</string>
+    <string name="action_selffDestructionMessage">Send read-once message</string>
+    <string name="title_activity_sefl_destructing_message_compose">Read-once Message</string>
+    <string name="to">To</string>
+    <string name="destroy_after">Destroy After</string>
+    <string name="destroy_after_20sec">20 sec</string>
+    <string name="destroy_after_1min">1 min</string>
+    <string name="destroy_after_2min">2 min</string>
+    <string name="message">Message</string>
+    <string name="send">Send</string>
 
 </resources>
