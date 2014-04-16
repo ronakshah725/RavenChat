@@ -69,8 +69,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.sumitgouthaman.raven.SeflDestructingMessageCompose"
-            android:label="@string/title_activity_sefl_destructing_message_compose" >
+            android:name=".SelfDestructingMessageCompose"
+            android:label="@string/title_activity_sefl_destructing_message_compose">
         </activity>
     </application>
 

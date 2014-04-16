@@ -65,5 +65,6 @@
     <string name="destroy_after_2min">2 min</string>
     <string name="message">Message</string>
     <string name="send">Send</string>
+    <string name="empty_message">Empty Message</string>
 
 </resources>
