@@ -1,6 +1,8 @@
 package com.sumitgouthaman.raven;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,7 +14,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sumitgouthaman.raven.listadapters.ChatThreadAdapter;
+import com.sumitgouthaman.raven.models.Message;
+import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.MessageDispatcher;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class SelfDestructingMessageCompose extends ActionBarActivity {
@@ -48,6 +57,7 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 final String receiverSecretUsername = targetSecretUsername;
+                final String receiverRegID = targetRegId;
                 final String mySecretUsernameStr = mySecretUsername;
                 final String message = messageField.getText().toString();
                 if (message.trim().equals("")) {
@@ -70,6 +80,45 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
                 }
                 final int destroyAfter = duration;
 
+                new AsyncTask() {
+                    ProgressDialog pd;
+
+                    @Override
+                    protected Object doInBackground(Object[] objects) {
+                        JSONObject messageJSON = new JSONObject();
+                        String messageStr = "";
+                        try {
+                            messageJSON.put("secretUsername", mySecretUsername);
+                            JSONObject messageOb = new JSONObject();
+                            messageOb.put("message", message);
+                            messageOb.put("destroyAfter", destroyAfter);
+                            messageJSON.put("messageText", messageOb.toString());
+                            messageStr = messageJSON.toString();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return MessageDispatcher.dispatchMessage(SelfDestructingMessageCompose.this, receiverRegID, MessageTypes.SELF_DESTRUCTING_MESSAGE, messageStr);
+                    }
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        pd = new ProgressDialog(SelfDestructingMessageCompose.this);
+                        pd.setMessage(getString(R.string.sending));
+                        pd.show();
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        if (o != null) {
+                            pd.dismiss();
+                            SelfDestructingMessageCompose.this.finish();
+                        } else {
+                            Toast.makeText(SelfDestructingMessageCompose.this, R.string.message_not_sent, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }.execute(null, null, null);
             }
         });
     }
