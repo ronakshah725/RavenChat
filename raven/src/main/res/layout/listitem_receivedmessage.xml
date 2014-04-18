@@ -26,6 +26,7 @@
             android:text="@string/placeholder_messagepreview"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textIsSelectable="true" />
+
         <TextView
             android:id="@+id/textView_timestamp"
             android:layout_width="wrap_content"
@@ -35,6 +36,6 @@
             android:paddingBottom="@dimen/elements_bottom_margin"
             android:text="@string/placeholder_messagepreview"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/color_timestamp"/>
+            android:textColor="@color/color_timestamp" />
     </RelativeLayout>
 </RelativeLayout>

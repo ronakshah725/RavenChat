@@ -20,8 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:singleLine="true"
         android:text="@string/placeholder_messagepreview"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_messagePreview"
-        android:singleLine="true"/>
+        android:textColor="@color/color_messagePreview" />
 </LinearLayout>

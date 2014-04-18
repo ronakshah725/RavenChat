@@ -66,5 +66,12 @@
     <string name="message">Message</string>
     <string name="send">Send</string>
     <string name="empty_message">Empty Message</string>
+    <string name="title_activity_self_destructing_message_display">Read-once Message</string>
+    <string name="from">From</string>
+    <string name="will_be_destroyed_after">Will be destroyed in</string>
+    <string name="placeholder_duration">20 seconds</string>
+    <string name="read_once_message">Read-once message reveived</string>
+    <string name="can_read_only_once">This message can be read only once</string>
+    <string name="seconds">sec</string>
 
 </resources>

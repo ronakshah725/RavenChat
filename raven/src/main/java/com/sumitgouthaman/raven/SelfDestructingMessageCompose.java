@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,11 +49,11 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
 
         contactNameField = (TextView) findViewById(R.id.textView_contactName);
         durationRadioGroup = (RadioGroup) findViewById(R.id.radioGroup_destroy_after);
-        messageField = (EditText) findViewById(R.id.editText_message);
+        messageField = (EditText) findViewById(R.id.editText_newMessageText);
 
         contactNameField.setText(targetUsername);
 
-        Button sendButton = (Button) findViewById(R.id.button_sendMessage);
+        ImageButton sendButton = (ImageButton) findViewById(R.id.button_newMessageSend);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,10 +90,8 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
                         String messageStr = "";
                         try {
                             messageJSON.put("secretUsername", mySecretUsername);
-                            JSONObject messageOb = new JSONObject();
-                            messageOb.put("message", message);
-                            messageOb.put("destroyAfter", destroyAfter);
-                            messageJSON.put("messageText", messageOb.toString());
+                            messageJSON.put("message", message);
+                            messageJSON.put("destroyAfter", destroyAfter);
                             messageStr = messageJSON.toString();
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -8,12 +8,21 @@ import android.support.v4.app.NotificationCompat;
 
 import com.sumitgouthaman.raven.R;
 
+import java.util.UUID;
+
 /**
  * Created by sumit on 27/3/14.
  */
 public class SimpleNotificationMaker {
     public static void sendNotification(Context context, String title, String msg, PendingIntent contentIntent) {
-        final int NOTIFICATION_ID = 1;
+        sendNotification(context, title, msg, contentIntent, false);
+    }
+
+    public static void sendNotification(Context context, String title, String msg, PendingIntent contentIntent, boolean unique) {
+        int NOTIFICATION_ID = 0;
+        if (unique) {
+            NOTIFICATION_ID = UUID.randomUUID().hashCode();
+        }
         NotificationManager mNotificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
 

@@ -20,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/textView_message"
                 android:layout_width="wrap_content"
@@ -28,15 +29,16 @@
                 android:text="@string/placeholder_messagepreview"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textIsSelectable="true" />
+
             <TextView
                 android:id="@+id/textView_timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:paddingBottom="@dimen/elements_bottom_margin"
                 android:text="@string/placeholder_messagepreview"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/color_timestamp"
-                android:layout_gravity="right"/>
+                android:textColor="@color/color_timestamp" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

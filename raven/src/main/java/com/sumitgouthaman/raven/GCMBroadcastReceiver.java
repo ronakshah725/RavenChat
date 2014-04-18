@@ -17,6 +17,8 @@ import com.sumitgouthaman.raven.utils.SimpleSoundNotificationMaker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.UUID;
+
 public class GCMBroadcastReceiver extends BroadcastReceiver {
     boolean inBackground;
     ChatThreadActivity chatThreadActivity;
@@ -146,6 +148,22 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         String contactSecretUsername = registrationUpdateOb.getString("secretUsername");
                         String newRegId = registrationUpdateOb.getString("registrationID");
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (recdMessageType == MessageTypes.SELF_DESTRUCTING_MESSAGE) {
+                    try {
+                        JSONObject selfDestructingMessageOb = new JSONObject(recdMessageText);
+                        String contactSecretUsername = selfDestructingMessageOb.getString("secretUsername");
+                        String message = selfDestructingMessageOb.getString("message");
+                        int destryAfter = selfDestructingMessageOb.getInt("destroyAfter");
+                        Intent selfDestructingMessageIntent = new Intent(context, SelfDestructingMessageDisplay.class);
+                        selfDestructingMessageIntent.putExtra("secretUsername", contactSecretUsername);
+                        selfDestructingMessageIntent.putExtra("destroyAfter", destryAfter);
+                        selfDestructingMessageIntent.putExtra("message", message);
+                        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                                selfDestructingMessageIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                        SimpleNotificationMaker.sendNotification(context, context.getString(R.string.read_once_message), context.getString(R.string.can_read_only_once), contentIntent, true);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
