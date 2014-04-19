@@ -70,14 +70,14 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
                     case R.id.radioButton_20sec:
                         duration = 20;
                         break;
-                    case R.id.radioButton_1min:
-                        duration = 1 * 60;
+                    case R.id.radioButton_5sec:
+                        duration = 5;
                         break;
-                    case R.id.radioButton_2min:
-                        duration = 2 * 60;
+                    case R.id.radioButton_10sec:
+                        duration = 10;
                         break;
                     default:
-                        duration = 20;
+                        duration = 10;
                 }
                 final int destroyAfter = duration;
 

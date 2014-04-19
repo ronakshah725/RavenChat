@@ -73,5 +73,7 @@
     <string name="read_once_message">Read-once message reveived</string>
     <string name="can_read_only_once">This message can be read only once</string>
     <string name="seconds">sec</string>
+    <string name="destroy_after_5sec">5 sec</string>
+    <string name="destroy_after_10sec">10 sec</string>
 
 </resources>

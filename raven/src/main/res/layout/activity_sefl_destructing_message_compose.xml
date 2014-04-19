@@ -53,23 +53,23 @@
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/radioButton_20sec"
+            android:id="@+id/radioButton_5sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
+            android:text="@string/destroy_after_5sec" />
+
+        <RadioButton
+            android:id="@+id/radioButton_10sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/destroy_after_10sec" />
+
+        <RadioButton
+            android:id="@+id/radioButton_20sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/destroy_after_20sec" />
-
-        <RadioButton
-            android:id="@+id/radioButton_1min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/destroy_after_1min" />
-
-        <RadioButton
-            android:id="@+id/radioButton_2min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/destroy_after_2min" />
     </RadioGroup>
 
     <TextView
@@ -109,22 +109,4 @@
             android:layout_weight="0"
             android:background="@drawable/ic_action_send_now" />
     </LinearLayout>
-
-    <!--<Button-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="@string/send"-->
-    <!--android:id="@+id/button_sendMessage"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_centerHorizontal="true" />-->
-
-    <!--<EditText-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/editText_message"-->
-    <!--android:layout_below="@+id/textView4"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_alignParentEnd="true"/>-->
 </RelativeLayout>

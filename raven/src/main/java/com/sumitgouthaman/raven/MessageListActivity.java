@@ -86,7 +86,7 @@ public class MessageListActivity extends ActionBarActivity {
         super.onResume();
         setContentView(R.layout.activity_message_list);
 
-        context = getApplicationContext();
+        context = this;
 
         if (!CheckPlayServices.check(this)) {
             Toast.makeText(this, getString(R.string.play_services_not_supported), Toast.LENGTH_LONG).show();
