@@ -70,6 +70,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/destroy_after_20sec" />
+
+        <RadioButton
+            android:id="@+id/radioButton_custom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/destroy_after_custom" />
     </RadioGroup>
 
     <TextView

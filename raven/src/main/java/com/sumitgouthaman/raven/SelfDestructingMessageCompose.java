@@ -1,16 +1,22 @@
 package com.sumitgouthaman.raven;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +41,7 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
     TextView contactNameField;
     EditText messageField;
     RadioGroup durationRadioGroup;
+    int customValue = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,41 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
         messageField = (EditText) findViewById(R.id.editText_newMessageText);
 
         contactNameField.setText(targetUsername);
+
+        RadioButton customButton = (RadioButton) findViewById(R.id.radioButton_custom);
+        customButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    final EditText input = new EditText(SelfDestructingMessageCompose.this);
+                    input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    new AlertDialog.Builder(SelfDestructingMessageCompose.this)
+                            .setTitle(R.string.custom_time)
+                            .setMessage(R.string.pick_custom_time)
+                            .setView(input)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    int value;
+                                    try {
+                                        value = Integer.parseInt(input.getText().toString().trim());
+                                        customValue = value;
+                                    } catch (NumberFormatException nfe) {
+                                        Toast.makeText(SelfDestructingMessageCompose.this, R.string.not_a_number, Toast.LENGTH_SHORT).show();
+                                        RadioButton btn5sec = (RadioButton) findViewById(R.id.radioButton_5sec);
+                                        btn5sec.setChecked(true);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    Toast.makeText(SelfDestructingMessageCompose.this, R.string.cancelled, Toast.LENGTH_SHORT).show();
+                                    RadioButton btn5sec = (RadioButton) findViewById(R.id.radioButton_5sec);
+                                    btn5sec.setChecked(true);
+                                }
+                            }).show();
+                }
+            }
+        });
 
         ImageButton sendButton = (ImageButton) findViewById(R.id.button_newMessageSend);
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +117,9 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
                         break;
                     case R.id.radioButton_10sec:
                         duration = 10;
+                        break;
+                    case R.id.radioButton_custom:
+                        duration = customValue;
                         break;
                     default:
                         duration = 10;

@@ -39,10 +39,11 @@ public class SelfDestructingMessageDisplay extends ActionBarActivity {
         handler = new Handler();
         Thread countDown = new Thread(new Runnable() {
             int timeLimit = destroyAfter;
+
             @Override
             public void run() {
-                while (timeLimit > 0){
-                    try{
+                while (timeLimit > 0) {
+                    try {
                         Thread.sleep(1000);
                         timeLimit--;
                         setRemainingTime(timeLimit);
@@ -56,7 +57,7 @@ public class SelfDestructingMessageDisplay extends ActionBarActivity {
         countDown.start();
     }
 
-    public void setRemainingTime(final int seconds){
+    public void setRemainingTime(final int seconds) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -65,7 +66,7 @@ public class SelfDestructingMessageDisplay extends ActionBarActivity {
         });
     }
 
-    public void dismiss(){
+    public void dismiss() {
         handler.post(new Runnable() {
             @Override
             public void run() {

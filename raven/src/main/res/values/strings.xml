@@ -75,5 +75,10 @@
     <string name="seconds">sec</string>
     <string name="destroy_after_5sec">5 sec</string>
     <string name="destroy_after_10sec">10 sec</string>
+    <string name="destroy_after_custom">custom</string>
+    <string name="custom_time">Custom Time</string>
+    <string name="pick_custom_time">Pick custom duration (seconds)</string>
+    <string name="not_a_number">Not a number</string>
+    <string name="cancelled">Cancelled</string>
 
 </resources>
