@@ -63,7 +63,7 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
         RadioButton customButton = (RadioButton) findViewById(R.id.radioButton_custom);
         customButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(final CompoundButton compoundButton, boolean b) {
                 if (b) {
                     final EditText input = new EditText(SelfDestructingMessageCompose.this);
                     input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -77,6 +77,7 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
                                     try {
                                         value = Integer.parseInt(input.getText().toString().trim());
                                         customValue = value;
+                                        compoundButton.setText(value + " (" + getString(R.string.destroy_after_custom) + ")");
                                     } catch (NumberFormatException nfe) {
                                         Toast.makeText(SelfDestructingMessageCompose.this, R.string.not_a_number, Toast.LENGTH_SHORT).show();
                                         RadioButton btn5sec = (RadioButton) findViewById(R.id.radioButton_5sec);
