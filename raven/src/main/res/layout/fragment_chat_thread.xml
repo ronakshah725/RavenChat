@@ -48,7 +48,7 @@
 
     <TextView
         android:id="@+id/textView_sendingStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout_chatBox"
         android:layout_centerHorizontal="true"
@@ -57,5 +57,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/color_timestamp"
         android:textStyle="italic"
+        android:padding="@dimen/chatbubble_surrounding_padding_vertical"
+        android:gravity="center"
         android:visibility="invisible" />
 </RelativeLayout>
