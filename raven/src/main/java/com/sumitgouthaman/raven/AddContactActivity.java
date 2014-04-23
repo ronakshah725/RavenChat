@@ -4,6 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +34,7 @@ import com.sumitgouthaman.raven.utils.StringToQRBitmap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.Charset;
 import java.util.Locale;
 
 
@@ -51,10 +55,14 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
      */
     ViewPager mViewPager;
 
+    NfcAdapter nfcAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -89,6 +97,35 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this)
             );
+        }
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundNdefPush(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        JSONObject ob = new JSONObject();
+        try {
+            ob.put("USERNAME", Persistence.getUsername(this));
+            ob.put("SECRET_USERNAME", Persistence.getSecretUsername(this));
+            ob.put("GCM_REG_ID", Persistence.getRegistrationID(this));
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{new NdefRecord(NdefRecord.TNF_WELL_KNOWN,
+                new String("application/" + this.getPackageName()).getBytes(Charset.forName("US-ASCII")),
+                null, ob.toString().getBytes())});
+        if (nfcAdapter != null) {
+            nfcAdapter.enableForegroundNdefPush(this, ndefMessage);
         }
     }
 
@@ -190,6 +227,7 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
             Bitmap bitmap = StringToQRBitmap.sting2QRBitmap(ob.toString());
             ImageView imageview = (ImageView) rootView.findViewById(R.id.imageView_mycode);
             imageview.setImageBitmap(bitmap);
+
         }
 
         public void displayScanCode(View rootView) {
