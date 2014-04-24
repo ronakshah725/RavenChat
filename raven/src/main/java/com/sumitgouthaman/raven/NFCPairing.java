@@ -1,0 +1,168 @@
+package com.sumitgouthaman.raven;
+
+import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Parcelable;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.text.format.Time;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sumitgouthaman.raven.models.Contact;
+import com.sumitgouthaman.raven.models.MessageTypes;
+import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.MessageDispatcher;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static android.nfc.NfcAdapter.*;
+
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCallback, OnNdefPushCompleteCallback {
+
+    NfcAdapter mNfcAdapter;
+    private static final int MESSAGE_SENT = 1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_nfcpairing);
+
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter == null) {
+            TextView mInfoText = (TextView) findViewById(R.id.textView);
+            mInfoText.setText(R.string.nfc_not_available);
+        } else {
+            // Register callback to set NDEF message
+            mNfcAdapter.setNdefPushMessageCallback(this, this);
+            // Register callback to listen for message-sent success
+            mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.nfcpairing, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == 0) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent nfcEvent) {JSONObject ob = new JSONObject();
+        try {
+            ob.put("USERNAME", Persistence.getUsername(this));
+            ob.put("SECRET_USERNAME", Persistence.getSecretUsername(this));
+            ob.put("GCM_REG_ID", Persistence.getRegistrationID(this));
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        String text = ob.toString();
+        NdefMessage msg = new NdefMessage(NdefRecord.createMime(
+                "application/com.sumitgouthaman.raven", text.getBytes()));
+        return msg;
+    }
+
+    @Override
+    public void onNdefPushComplete(NfcEvent nfcEvent) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Check to see that the Activity started due to an Android Beam
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+            processIntent(getIntent());
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        // onResume gets called after this to handle the intent
+        setIntent(intent);
+    }
+
+    /**
+     * Parses the NDEF Message from the intent and prints to the TextView
+     */
+    void processIntent(Intent intent) {
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
+                NfcAdapter.EXTRA_NDEF_MESSAGES);
+        // only one message sent during the beam
+        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        // record 0 contains the MIME type, record 1 is the AAR, if present
+        String pairingString = (new String(msg.getRecords()[0].getPayload()));
+        try {
+            JSONObject contactOb = new JSONObject(pairingString);
+            if (contactOb.getString("SECRET_USERNAME").equals(Persistence.getSecretUsername(this))) {
+                Toast.makeText(this, R.string.cannot_add_yourself, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Contact newContact = new Contact();
+            newContact.username = contactOb.getString("USERNAME");
+            newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
+            newContact.registrationID = contactOb.getString("GCM_REG_ID");
+            Persistence.addNewContact(this, newContact);
+            JSONObject pairingRequest = new JSONObject();
+            pairingRequest.put("username", Persistence.getUsername(this));
+            pairingRequest.put("secretUsername", Persistence.getSecretUsername(this));
+            pairingRequest.put("registrationID", Persistence.getRegistrationID(this));
+            final String pairingMessage = pairingRequest.toString();
+            final String targetRegId = newContact.registrationID;
+            final String targetName = newContact.username;
+            new AsyncTask() {
+                private ProgressDialog progressDialog;
+
+                @Override
+                protected Object doInBackground(Object[] objects) {
+                    return MessageDispatcher.dispatchMessage(NFCPairing.this, targetRegId, MessageTypes.PAIRING_MESSAGE, pairingMessage);
+                }
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog = new ProgressDialog(NFCPairing.this);
+                    progressDialog.setMessage("Sending pairing request to " + targetName);
+                    progressDialog.show();
+
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    progressDialog.dismiss();
+                    NFCPairing.this.finish();
+                }
+            }.execute(null, null, null);
+        } catch (JSONException je) {
+            je.printStackTrace();
+            Toast.makeText(this, getString(R.string.nfc_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+}

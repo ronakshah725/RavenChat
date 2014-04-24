@@ -80,5 +80,11 @@
     <string name="pick_custom_time">Pick custom duration (seconds)</string>
     <string name="not_a_number">Not a number</string>
     <string name="cancelled">Cancelled</string>
+    <string name="title_activity_nfcpairing">NFC Pairing</string>
+    <string name="nfc_instruction">Tap with another NFC enabled device to pair</string>
+    <string name="nfc_not_available">NFC not available on this device</string>
+    <string name="nfc_error">Error in NFC tag</string>
+    <string name="action_pair_by_nfc">Use NFC</string>
+    <string name="nfc_version_limit">NFC pairing only supported in JellyBean</string>
 
 </resources>

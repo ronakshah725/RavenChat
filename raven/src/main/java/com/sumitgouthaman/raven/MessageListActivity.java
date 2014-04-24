@@ -230,10 +230,10 @@ public class MessageListActivity extends ActionBarActivity {
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
                 String msg = o.toString();
-                if (msg.equals(""))
-                    Toast.makeText(context, getString(R.string.registration_completed), Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(context, getString(R.string.registration_error), Toast.LENGTH_SHORT).show();
+//                if (msg.equals(""))
+//                    Toast.makeText(context, getString(R.string.registration_completed), Toast.LENGTH_SHORT).show();
+//                else
+//                    Toast.makeText(context, getString(R.string.registration_error), Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
     }

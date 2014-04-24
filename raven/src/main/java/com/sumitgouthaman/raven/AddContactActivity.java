@@ -8,6 +8,7 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -55,14 +56,10 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
      */
     ViewPager mViewPager;
 
-    NfcAdapter nfcAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
-
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -102,33 +99,6 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (nfcAdapter != null) {
-            nfcAdapter.disableForegroundNdefPush(this);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        JSONObject ob = new JSONObject();
-        try {
-            ob.put("USERNAME", Persistence.getUsername(this));
-            ob.put("SECRET_USERNAME", Persistence.getSecretUsername(this));
-            ob.put("GCM_REG_ID", Persistence.getRegistrationID(this));
-        } catch (JSONException je) {
-            je.printStackTrace();
-        }
-        NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{new NdefRecord(NdefRecord.TNF_WELL_KNOWN,
-                new String("application/" + this.getPackageName()).getBytes(Charset.forName("US-ASCII")),
-                null, ob.toString().getBytes())});
-        if (nfcAdapter != null) {
-            nfcAdapter.enableForegroundNdefPush(this, ndefMessage);
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,7 +114,19 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == 0) {
+        if (id == R.id.action_pair_by_nfc) {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
+                if(nfc==null){
+                    Toast.makeText(this, R.string.nfc_not_available, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                Intent intent = new Intent(this, NFCPairing.class);
+                startActivity(intent);
+                finish();
+            }else{
+                Toast.makeText(this, R.string.nfc_version_limit, Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

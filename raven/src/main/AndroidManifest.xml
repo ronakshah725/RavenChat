@@ -76,6 +76,10 @@
             android:name="com.sumitgouthaman.raven.SelfDestructingMessageDisplay"
             android:label="@string/title_activity_self_destructing_message_display" >
         </activity>
+        <activity
+            android:name="com.sumitgouthaman.raven.NFCPairing"
+            android:label="@string/title_activity_nfcpairing" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
