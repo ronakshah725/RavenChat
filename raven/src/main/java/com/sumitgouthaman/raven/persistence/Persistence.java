@@ -115,6 +115,10 @@ public class Persistence {
     }
 
     public static void addNewContact(Context context, Contact newContact) {
+        Contact alreadyExisting = getUser(context, newContact.secretUsername);
+        if (alreadyExisting != null) {
+            return;
+        }
         SharedPreferences shared = context.getSharedPreferences(key, 0);
         String contactsStr = shared.getString("CONTACTS", "[]");
         try {
