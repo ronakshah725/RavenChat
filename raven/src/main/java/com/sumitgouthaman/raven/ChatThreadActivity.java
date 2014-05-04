@@ -22,6 +22,7 @@ import com.sumitgouthaman.raven.listadapters.ChatThreadAdapter;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.services.DispatchMessageIntentService;
 import com.sumitgouthaman.raven.utils.MessageDispatcher;
 
 import org.json.JSONException;
@@ -138,49 +139,77 @@ public class ChatThreadActivity extends ActionBarActivity {
                     }
                     final String mySecretUsername = Persistence.getSecretUsername(getActivity());
                     final String toRegId = targetRegistrationID;
-                    new AsyncTask() {
-                        @Override
-                        protected Object doInBackground(Object[] objects) {
-                            JSONObject messageJSON = new JSONObject();
-                            String messageStr = "";
-                            try {
-                                messageJSON.put("secretUsername", mySecretUsername);
-                                messageJSON.put("messageText", messageText);
-                                messageStr = messageJSON.toString();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            return MessageDispatcher.dispatchMessage(getActivity(), toRegId, MessageTypes.MORNAL_MESSAGE, messageStr);
-                        }
-
-                        @Override
-                        protected void onPreExecute() {
-                            super.onPreExecute();
-                            newMessageField.setText("");
-                            TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
-                            sendingMessage.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        protected void onPostExecute(Object o) {
-                            super.onPostExecute(o);
-                            if (o != null) {
-                                Message message = new Message();
-                                message.messageText = messageText;
-                                message.timestamp = System.currentTimeMillis();
-                                message.receivedMessage = false;
-                                Persistence.addMessage(getActivity(), secretUsername, message);
-                                messages = Persistence.getMessages(getActivity(), secretUsername);
-                                cta = new ChatThreadAdapter(getActivity(), messages);
-                                messagesList.setAdapter(cta);
-                            } else {
-                                Toast.makeText(getActivity(), R.string.message_not_sent, Toast.LENGTH_SHORT).show();
-                                newMessageField.setText(messageText);
-                            }
-                            TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
-                            sendingMessage.setVisibility(View.INVISIBLE);
-                        }
-                    }.execute(null, null, null);
+                    JSONObject messageJSON = new JSONObject();
+                    String messageStr = "";
+                    try {
+                        messageJSON.put("secretUsername", mySecretUsername);
+                        messageJSON.put("messageText", messageText);
+                        messageStr = messageJSON.toString();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(getActivity(), DispatchMessageIntentService.class);
+                    intent.putExtra("registrationID", toRegId);
+                    intent.putExtra("messageType", MessageTypes.MORNAL_MESSAGE);
+                    intent.putExtra("message", messageStr);
+                    intent.putExtra("targetSecretUsername", secretUsername);
+                    intent.putExtra("messageText", messageText);
+                    getActivity().startService(intent);
+                    newMessageField.setText("");
+                    //messages = Persistence.getMessages(getActivity(), secretUsername);
+                    Message[] temp = new Message[messages.length+1];
+                    System.arraycopy(messages, 0, temp, 0, messages.length);
+                    Message message = new Message();
+                    message.messageText = messageText;
+                    message.timestamp = -1l;
+                    message.receivedMessage = false;
+                    temp[messages.length] = message;
+                    messages = temp;
+                    cta = new ChatThreadAdapter(getActivity(), messages);
+                    messagesList.setAdapter(cta);
+//                    new AsyncTask() {
+//                        @Override
+//                        protected Object doInBackground(Object[] objects) {
+//                            JSONObject messageJSON = new JSONObject();
+//                            String messageStr = "";
+//                            try {
+//                                messageJSON.put("secretUsername", mySecretUsername);
+//                                messageJSON.put("messageText", messageText);
+//                                messageStr = messageJSON.toString();
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                            return MessageDispatcher.dispatchMessage(getActivity(), toRegId, MessageTypes.MORNAL_MESSAGE, messageStr);
+//                        }
+//
+//                        @Override
+//                        protected void onPreExecute() {
+//                            super.onPreExecute();
+//                            newMessageField.setText("");
+//                            TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
+//                            sendingMessage.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        protected void onPostExecute(Object o) {
+//                            super.onPostExecute(o);
+//                            if (o != null) {
+//                                Message message = new Message();
+//                                message.messageText = messageText;
+//                                message.timestamp = System.currentTimeMillis();
+//                                message.receivedMessage = false;
+//                                Persistence.addMessage(getActivity(), secretUsername, message);
+//                                messages = Persistence.getMessages(getActivity(), secretUsername);
+//                                cta = new ChatThreadAdapter(getActivity(), messages);
+//                                messagesList.setAdapter(cta);
+//                            } else {
+//                                Toast.makeText(getActivity(), R.string.message_not_sent, Toast.LENGTH_SHORT).show();
+//                                newMessageField.setText(messageText);
+//                            }
+//                            TextView sendingMessage = (TextView) getActivity().findViewById(R.id.textView_sendingStatus);
+//                            sendingMessage.setVisibility(View.INVISIBLE);
+//                        }
+//                    }.execute(null, null, null);
                 }
             });
 

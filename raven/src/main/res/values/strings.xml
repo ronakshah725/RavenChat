@@ -86,5 +86,7 @@
     <string name="nfc_error">Error in NFC tag</string>
     <string name="action_pair_by_nfc">Use NFC</string>
     <string name="nfc_version_limit">NFC pairing only supported in JellyBean</string>
+    <string name="not_sent">Not sent</string>
+    <string name="dispatched">Dispatched</string>
 
 </resources>
