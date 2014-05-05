@@ -38,30 +38,35 @@ public class DispatchMessageIntentService extends IntentService {
             String messageText = intent.getStringExtra("messageText");
 
             String result = null;
-            try {
-                HttpClient client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost("https://android.googleapis.com/gcm/send");
-                httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-                httpPost.addHeader("Authorization", "key=" + getString(R.string.api_key));
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                JSONObject data = new JSONObject();
-                data.put("messageType", messageType);
-                data.put("messageText", message);
-                nameValuePairs.add(new BasicNameValuePair("data", data.toString()));
-                nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
-                HttpResponse response = client.execute(httpPost);
-                HttpEntity entity = response.getEntity();
-                result = EntityUtils.toString(entity, "UTF-8");
-            } catch (Exception ie) {
-                ie.printStackTrace();
-            }
+            int retries = 3;
 
+            while (result == null && retries > 0) {
+                try {
+                    HttpClient client = new DefaultHttpClient();
+                    HttpPost httpPost = new HttpPost("https://android.googleapis.com/gcm/send");
+                    httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+                    httpPost.addHeader("Authorization", "key=" + getString(R.string.api_key));
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    JSONObject data = new JSONObject();
+                    data.put("messageType", messageType);
+                    data.put("messageText", message);
+                    nameValuePairs.add(new BasicNameValuePair("data", data.toString()));
+                    nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
+                    HttpResponse response = client.execute(httpPost);
+                    HttpEntity entity = response.getEntity();
+                    result = EntityUtils.toString(entity, "UTF-8");
+                } catch (Exception ie) {
+                    ie.printStackTrace();
+                    result = null;
+                }
+                retries--;
+            }
             Message messageOb = new Message();
             messageOb.messageText = messageText;
             messageOb.timestamp = System.currentTimeMillis();
             messageOb.receivedMessage = false;
-            if(result==null){
+            if (result == null) {
                 messageOb.timestamp = 0l;
             }
             Persistence.addMessage(this, secretUsername, messageOb);
