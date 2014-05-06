@@ -31,8 +31,8 @@ import static android.nfc.NfcAdapter.*;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCallback, OnNdefPushCompleteCallback {
 
-    NfcAdapter mNfcAdapter;
     private static final int MESSAGE_SENT = 1;
+    NfcAdapter mNfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.nfcpairing, menu);
         return true;
@@ -73,7 +73,8 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
     }
 
     @Override
-    public NdefMessage createNdefMessage(NfcEvent nfcEvent) {JSONObject ob = new JSONObject();
+    public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
+        JSONObject ob = new JSONObject();
         try {
             ob.put("USERNAME", Persistence.getUsername(this));
             ob.put("SECRET_USERNAME", Persistence.getSecretUsername(this));

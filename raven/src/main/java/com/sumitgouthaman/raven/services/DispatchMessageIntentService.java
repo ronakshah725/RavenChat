@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -33,14 +34,33 @@ public class DispatchMessageIntentService extends IntentService {
         if (intent != null) {
             String regId = intent.getStringExtra("registrationID");
             int messageType = intent.getIntExtra("messageType", -1);
-            String message = intent.getStringExtra("message");
             String secretUsername = intent.getStringExtra("targetSecretUsername");
-            String messageText = intent.getStringExtra("messageText");
+
+            Message toBeSent = Persistence.getMessageFromQueue(this, secretUsername);
+
+            JSONObject messageJSON = new JSONObject();
+            String messageText = "";
+            try {
+                messageJSON.put("secretUsername", Persistence.getSecretUsername(this));
+                messageJSON.put("messageText", toBeSent.messageText);
+                messageText = messageJSON.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             String result = null;
             int retries = 3;
 
             while (result == null && retries > 0) {
+                try {
+                    if (retries == 2) {
+                        Thread.sleep(3000);
+                    } else if (retries == 1) {
+                        Thread.sleep(5000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 try {
                     HttpClient client = new DefaultHttpClient();
                     HttpPost httpPost = new HttpPost("https://android.googleapis.com/gcm/send");
@@ -49,7 +69,7 @@ public class DispatchMessageIntentService extends IntentService {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     JSONObject data = new JSONObject();
                     data.put("messageType", messageType);
-                    data.put("messageText", message);
+                    data.put("messageText", messageText);
                     nameValuePairs.add(new BasicNameValuePair("data", data.toString()));
                     nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
                     httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
@@ -62,14 +82,14 @@ public class DispatchMessageIntentService extends IntentService {
                 }
                 retries--;
             }
-            Message messageOb = new Message();
-            messageOb.messageText = messageText;
-            messageOb.timestamp = System.currentTimeMillis();
-            messageOb.receivedMessage = false;
+
             if (result == null) {
-                messageOb.timestamp = 0l;
+                toBeSent.timestamp = 0l;
+            } else {
+                toBeSent.timestamp = System.currentTimeMillis();
             }
-            Persistence.addMessage(this, secretUsername, messageOb);
+            Persistence.addMessage(this, secretUsername, toBeSent);
+            Persistence.removeMessageFromQueue(this, secretUsername);
         }
     }
 }

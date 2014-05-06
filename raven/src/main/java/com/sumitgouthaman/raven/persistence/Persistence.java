@@ -203,12 +203,21 @@ public class Persistence {
 
     public static Message[] getMessages(Context context, String secretUsername) {
         SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String messageQueueKey = secretUsername + "_QUEUED";
         try {
             JSONArray messagesArr = new JSONArray(shared.getString(secretUsername, "[]"));
-            Message[] messages = new Message[messagesArr.length()];
+            JSONArray queuedMessagesArr = new JSONArray(shared.getString(messageQueueKey, "[]"));
+            int l1 = messagesArr.length();
+            int l2 = queuedMessagesArr.length();
+            Message[] messages = new Message[l1 + l2];
             for (int i = 0; i < messages.length; i++) {
                 messages[i] = new Message();
-                JSONObject messageOb = messagesArr.getJSONObject(i);
+                JSONObject messageOb;
+                if (i < l1) {
+                    messageOb = messagesArr.getJSONObject(i);
+                } else {
+                    messageOb = queuedMessagesArr.getJSONObject(i - l1);
+                }
                 messages[i].messageText = messageOb.getString("MESSAGE_TEXT");
                 messages[i].receivedMessage = messageOb.getBoolean("RECD_MESSAGE");
                 messages[i].timestamp = messageOb.getLong("TIMESTAMP");
@@ -309,6 +318,65 @@ public class Persistence {
                     return;
                 }
             }
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
+    //Queued messages
+    public static void addMessageToQueue(Context context, String secretUsername, Message message) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String messageQueueKey = secretUsername + "_QUEUED";
+        try {
+            JSONArray messagesArr = new JSONArray(shared.getString(messageQueueKey, "[]"));
+            JSONObject messageOb = new JSONObject();
+            messageOb.put("MESSAGE_TEXT", message.messageText);
+            messageOb.put("RECD_MESSAGE", message.receivedMessage);
+            messageOb.put("TIMESTAMP", -1l);
+            messagesArr.put(messageOb);
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(messageQueueKey, messagesArr.toString());
+            editor.commit();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
+    public static Message getMessageFromQueue(Context context, String secretUsername) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String messageQueueKey = secretUsername + "_QUEUED";
+        try {
+            JSONArray messagesArr = new JSONArray(shared.getString(messageQueueKey, "[]"));
+            if (messagesArr.length() < 1) {
+                return null;
+            }
+            JSONObject messageOb = messagesArr.getJSONObject(0);
+            Message message = new Message();
+            message.messageText = messageOb.getString("MESSAGE_TEXT");
+            message.receivedMessage = messageOb.getBoolean("RECD_MESSAGE");
+            message.timestamp = -1l;
+            return message;
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void removeMessageFromQueue(Context context, String secretUsername) {
+        SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String messageQueueKey = secretUsername + "_QUEUED";
+        try {
+            JSONArray oldMessagesArr = new JSONArray(shared.getString(messageQueueKey, "[]"));
+            if (oldMessagesArr.length() < 1) {
+                return;
+            }
+            JSONArray messagesArr = new JSONArray();
+            for (int i = 1; i < oldMessagesArr.length(); i++) {
+                messagesArr.put(oldMessagesArr.getJSONObject(i));
+            }
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString(messageQueueKey, messagesArr.toString());
+            editor.commit();
         } catch (JSONException je) {
             je.printStackTrace();
         }

@@ -117,14 +117,14 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
         if (id == R.id.action_pair_by_nfc) {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 NfcAdapter nfc = NfcAdapter.getDefaultAdapter(this);
-                if(nfc==null){
+                if (nfc == null) {
                     Toast.makeText(this, R.string.nfc_not_available, Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 Intent intent = new Intent(this, NFCPairing.class);
                 startActivity(intent);
                 finish();
-            }else{
+            } else {
                 Toast.makeText(this, R.string.nfc_version_limit, Toast.LENGTH_SHORT).show();
             }
             return true;
