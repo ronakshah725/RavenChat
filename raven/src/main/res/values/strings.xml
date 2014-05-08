@@ -88,5 +88,6 @@
     <string name="nfc_version_limit">NFC pairing only supported in JellyBean</string>
     <string name="not_sent">Not sent</string>
     <string name="dispatched">Dispatched</string>
+    <string name="sending_regid_contacts">Sending new Registration ID to contacts</string>
 
 </resources>

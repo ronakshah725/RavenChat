@@ -48,7 +48,7 @@ public class DispatchRegUpdateMessageIntentService extends IntentService {
             }
 
             Contact[] contacts = Persistence.getContacts(this);
-            for(Contact c: contacts){
+            for (Contact c : contacts) {
                 String result = null;
                 int retries = 3;
 

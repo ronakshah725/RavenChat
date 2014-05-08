@@ -26,6 +26,7 @@ import com.sumitgouthaman.raven.listadapters.MessageListAdapter;
 import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.MessageListItem;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.services.DispatchRegUpdateMessageIntentService;
 import com.sumitgouthaman.raven.utils.CheckPlayServices;
 
 import java.io.IOException;
@@ -197,6 +198,7 @@ public class MessageListActivity extends ActionBarActivity {
      */
     private void registerInBackground() {
         new AsyncTask() {
+            boolean propagateChange = false;
 
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -207,6 +209,13 @@ public class MessageListActivity extends ActionBarActivity {
                     }
                     regid = gcm.register(Persistence.getSenderID(context));
                     msg = "Device registered, registration ID=" + regid;
+
+                    String oldRegId = Persistence.getRegistrationID(context);
+                    if (oldRegId != null) {
+                        if (!oldRegId.equals(regid)) {
+                            propagateChange = true;
+                        }
+                    }
 
                     // Persist the regID - no need to register again.
                     Persistence.setRegistrationID(context, regid);
@@ -224,6 +233,7 @@ public class MessageListActivity extends ActionBarActivity {
             protected void onPreExecute() {
                 super.onPreExecute();
                 Toast.makeText(context, getString(R.string.registering_device), Toast.LENGTH_SHORT).show();
+                propagateChange = false;
             }
 
             @Override
@@ -234,6 +244,11 @@ public class MessageListActivity extends ActionBarActivity {
 //                    Toast.makeText(context, getString(R.string.registration_completed), Toast.LENGTH_SHORT).show();
 //                else
 //                    Toast.makeText(context, getString(R.string.registration_error), Toast.LENGTH_SHORT).show();
+                if(propagateChange){
+                    Toast.makeText(context, R.string.sending_regid_contacts, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, DispatchRegUpdateMessageIntentService.class);
+                    startService(intent);
+                }
             }
         }.execute(null, null, null);
     }
