@@ -40,6 +40,7 @@ public class ChatThreadActivity extends ActionBarActivity {
     private static ChatThreadAdapter cta;
 
     GCMBroadcastReceiver receiver;
+    IntentFilter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +58,26 @@ public class ChatThreadActivity extends ActionBarActivity {
         }
 
         receiver = new GCMBroadcastReceiver(false, this);
-        IntentFilter filter = new IntentFilter();
+        filter = new IntentFilter();
         filter.addAction("com.google.android.c2dm.intent.RECEIVE");
         filter.setPriority(2);
-        registerReceiver(receiver, filter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(receiver, filter);
     }
 
     @Override
