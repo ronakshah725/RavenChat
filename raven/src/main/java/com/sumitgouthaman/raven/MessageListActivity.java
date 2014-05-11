@@ -56,30 +56,12 @@ public class MessageListActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_message_list);
-//
-//        context = getApplicationContext();
-//
-//        if (!CheckPlayServices.check(this)) {
-//            Toast.makeText(this, getString(R.string.play_services_not_supported), Toast.LENGTH_LONG).show();
-//            finish();
-//        }
-//
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.container, new PlaceholderFragment())
-//                    .commit();
-//        }
-//
-//        initialCheck();
-//
-//        gcm = GoogleCloudMessaging.getInstance(this);
-//        regid = getRegistrationId(context);
-//
-//        if (regid.isEmpty()) {
-//            registerInBackground();
-//        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.enter_from_bottom, R.anim.exit_to_top);
     }
 
     @Override
@@ -128,10 +110,12 @@ public class MessageListActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         } else if (id == R.id.action_addContact) {
             Intent intent = new Intent(this, AddContactActivity.class);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         }
         return super.onOptionsItemSelected(item);

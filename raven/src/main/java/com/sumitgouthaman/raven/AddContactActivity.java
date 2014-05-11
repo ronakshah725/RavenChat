@@ -99,6 +99,12 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

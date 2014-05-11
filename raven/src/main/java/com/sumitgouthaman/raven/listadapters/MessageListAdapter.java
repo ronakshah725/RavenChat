@@ -1,5 +1,6 @@
 package com.sumitgouthaman.raven.listadapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -31,17 +32,17 @@ import org.json.JSONObject;
  */
 public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
 
-    private final Context context;
+    private final Activity context;
     private final MessageListItem[] messageListItems;
     private final String mySecretUsername;
     private String prepopulatedMessage = null;
 
-    public MessageListAdapter(Context context, MessageListItem[] messageListItems, String prepopulatedMessage) {
+    public MessageListAdapter(Activity context, MessageListItem[] messageListItems, String prepopulatedMessage) {
         this(context, messageListItems);
         this.prepopulatedMessage = prepopulatedMessage;
     }
 
-    public MessageListAdapter(Context context, MessageListItem[] messageListItems) {
+    public MessageListAdapter(Activity context, MessageListItem[] messageListItems) {
         super(context, R.layout.listitem_messagelist, messageListItems);
         this.context = context;
         this.messageListItems = messageListItems;
@@ -73,6 +74,7 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
                     intent.putExtra("prepopulatedMessage", prepopulatedMessage);
                 }
                 context.startActivity(intent);
+                context.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
             }
         });
         rowView.setOnLongClickListener(new View.OnLongClickListener() {

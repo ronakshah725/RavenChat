@@ -71,6 +71,7 @@ public class ChatThreadActivity extends ActionBarActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
         unregisterReceiver(receiver);
     }
 
@@ -100,6 +101,7 @@ public class ChatThreadActivity extends ActionBarActivity {
             intent.putExtra("username", contactName);
             intent.putExtra("registrationID", targetRegistrationID);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -110,6 +112,7 @@ public class ChatThreadActivity extends ActionBarActivity {
         cta = new ChatThreadAdapter(this, messages);
         messagesList.setAdapter(cta);
     }
+
 
     /**
      * A placeholder fragment containing a simple view.

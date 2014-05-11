@@ -168,6 +168,12 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
