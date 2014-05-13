@@ -91,6 +91,10 @@
             android:name="com.sumitgouthaman.raven.services.DispatchRegUpdateMessageIntentService"
             android:exported="false" >
         </service>
+        <service
+            android:name="com.sumitgouthaman.raven.services.DispatchNameUpdateMessageIntentService"
+            android:exported="false" >
+        </service>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

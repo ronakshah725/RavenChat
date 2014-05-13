@@ -26,8 +26,8 @@ public class Persistence {
     private static final String key = "RAVEN";
     private static final String[] persistenceKeys = {"USERNAME", "SECRET_USERNAME", "REGISTRATION_ID", "DEBUG_MESSAGES", "LAST_VERSION", "CONTACTS"};
 
-    public static String getUsername(Activity activity) {
-        SharedPreferences shared = activity.getSharedPreferences(key, 0);
+    public static String getUsername(Context context) {
+        SharedPreferences shared = context.getSharedPreferences(key, 0);
         return shared.getString("USERNAME", null);
     }
 

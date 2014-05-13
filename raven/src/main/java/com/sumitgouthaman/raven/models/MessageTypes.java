@@ -10,4 +10,5 @@ public class MessageTypes {
     public static final int REMOVE_CONTACT = 3;
     public static final int REGISTRATION_UPDATE = 4;
     public static final int SELF_DESTRUCTING_MESSAGE = 5;
+    public static final int USERNAME_UPDATE = 6;
 }
