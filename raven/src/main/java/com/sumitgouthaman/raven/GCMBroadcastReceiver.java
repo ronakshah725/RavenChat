@@ -167,6 +167,30 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                } else if (recdMessageType == MessageTypes.USERNAME_UPDATE) {
+                    try {
+                        JSONObject updateUsernameMessageOb = new JSONObject(recdMessageText);
+                        String contactSecretUsername = updateUsernameMessageOb.getString("secretUsername");
+                        String newUsername = updateUsernameMessageOb.getString("username");
+                        String oldUsername = Persistence.getUser(context, contactSecretUsername).username;
+                        Persistence.updateContactUsername(context, contactSecretUsername, newUsername);
+                        Contact user = Persistence.getUser(context, contactSecretUsername);
+                        if (user != null) {
+                            String username = user.username;
+                            String userRegID = user.registrationID;
+                            Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
+                            chatThreadIntent.putExtra("secretUsername", contactSecretUsername);
+                            chatThreadIntent.putExtra("registrationID", userRegID);
+                            chatThreadIntent.putExtra("contactName", username);
+                            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                                    chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                            //String message = String.format(context.getString(R.string.contact_is_renamed), oldUsername, newUsername);
+                            String message = oldUsername + " " + context.getString(R.string.is_now) + " " + newUsername;
+                            SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_renamed), message, contentIntent, true);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

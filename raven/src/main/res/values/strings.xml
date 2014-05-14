@@ -89,5 +89,7 @@
     <string name="not_sent">Not sent</string>
     <string name="dispatched">Dispatched</string>
     <string name="sending_regid_contacts">Sending new Registration ID to contacts</string>
+    <string name="contact_renamed">Contact renamed</string>
+    <string name="is_now">is now</string>
 
 </resources>

@@ -228,7 +228,7 @@ public class MessageListActivity extends ActionBarActivity {
 //                    Toast.makeText(context, getString(R.string.registration_completed), Toast.LENGTH_SHORT).show();
 //                else
 //                    Toast.makeText(context, getString(R.string.registration_error), Toast.LENGTH_SHORT).show();
-                if(propagateChange){
+                if (propagateChange) {
                     Toast.makeText(context, R.string.sending_regid_contacts, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(context, DispatchRegUpdateMessageIntentService.class);
                     startService(intent);

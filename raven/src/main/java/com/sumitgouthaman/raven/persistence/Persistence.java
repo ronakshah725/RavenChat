@@ -38,6 +38,28 @@ public class Persistence {
         editor.commit();
     }
 
+    public static void updateContactUsername(Context context, String secretUsername, String newUsername) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String contactsStr = sharedPreferences.getString("CONTACTS", "[]");
+        try {
+            JSONArray contactsArr = new JSONArray(contactsStr);
+            JSONArray newContactsArr = new JSONArray();
+            for (int i = 0; i < contactsArr.length(); i++) {
+                JSONObject contactOb = contactsArr.getJSONObject(i);
+                String targetSecretUsername = contactOb.getString("secretUsername");
+                if (targetSecretUsername.equals(secretUsername)) {
+                    contactOb.put("username", newUsername);
+                }
+                newContactsArr.put(contactOb);
+            }
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("CONTACTS", newContactsArr.toString());
+            editor.commit();
+        } catch (JSONException je) {
+            je.printStackTrace();
+        }
+    }
+
     public static String getSecretUsername(Context context) {
         SharedPreferences shared = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         String secretUsername = shared.getString("SECRET_USERNAME", null);
