@@ -81,6 +81,23 @@
                 android:layout_marginBottom="@dimen/elements_bottom_margin"
                 android:text="Not Found"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/elements_bottom_margin"
+                android:text="Other"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView_other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/elements_bottom_margin"
+                android:text="Not Found"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
         </LinearLayout>
 
     </ScrollView>

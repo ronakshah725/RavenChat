@@ -9,6 +9,14 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.crypto.Base64Utils;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class DebugActivity extends ActionBarActivity {
@@ -38,6 +46,7 @@ public class DebugActivity extends ActionBarActivity {
 //        storedKeys.setText(shared.getAll().toString());
         TextView secretUsername = (TextView) findViewById(R.id.textView_secretUsername);
         secretUsername.setText(Persistence.getSecretUsername(this));
+
     }
 
 
