@@ -38,6 +38,7 @@ public class ChatThreadActivity extends ActionBarActivity {
     private static Message[] messages;
     private static ListView messagesList;
     private static ChatThreadAdapter cta;
+    private static String encKey;
 
     GCMBroadcastReceiver receiver;
     IntentFilter filter;
@@ -50,6 +51,7 @@ public class ChatThreadActivity extends ActionBarActivity {
         targetRegistrationID = getIntent().getStringExtra("registrationID");
         contactName = getIntent().getStringExtra("contactName");
         prepopulatedMessage = getIntent().getStringExtra("prepopulatedMessage");
+        encKey = getIntent().getStringExtra("encKey");
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -174,6 +176,11 @@ public class ChatThreadActivity extends ActionBarActivity {
 
             ActionBar ab = getActivity().getActionBar();
             ab.setTitle(contactName);
+            if (encKey == null) {
+                ab.setSubtitle(R.string.not_encrypted);
+            } else {
+                ab.setSubtitle(R.string.encrypted);
+            }
             return rootView;
         }
     }

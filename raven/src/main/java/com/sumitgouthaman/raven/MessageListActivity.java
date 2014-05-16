@@ -259,6 +259,7 @@ public class MessageListActivity extends ActionBarActivity {
                 }
                 messages[i].secretUsername = contacts[i].secretUsername;
                 messages[i].registrationID = contacts[i].registrationID;
+                messages[i].encKey = contacts[i].encKey;
             }
 
             ListView messagesList = (ListView) rootView.findViewById(R.id.listView_MessageList);

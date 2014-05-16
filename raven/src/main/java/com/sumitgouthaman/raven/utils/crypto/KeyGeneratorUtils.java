@@ -9,10 +9,10 @@ import javax.crypto.KeyGenerator;
  * Created by sumit on 15/5/14.
  */
 public class KeyGeneratorUtils {
-    public static String getNewKey(String secretUsername){
+    public static String getNewKey(String secretUsername) {
         String salt = "KNzFSWX7hCcG3qoZJx0V";
-        String timestamp = System.currentTimeMillis()+"";
-        String seed = salt+secretUsername+timestamp+salt;
+        String timestamp = System.currentTimeMillis() + "";
+        String seed = salt + secretUsername + timestamp + salt;
         byte[] arr = null;
         try {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
@@ -23,9 +23,9 @@ public class KeyGeneratorUtils {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        if(arr==null){
+        if (arr == null) {
             return null;
-        }else{
+        } else {
             return Base64Utils.encode(arr);
         }
     }

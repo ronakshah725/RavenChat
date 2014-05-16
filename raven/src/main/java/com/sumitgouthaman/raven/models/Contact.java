@@ -8,4 +8,5 @@ public class Contact {
     public String secretUsername;
     public String registrationID;
     public Message lastMessage = null;
+    public String encKey = null;
 }

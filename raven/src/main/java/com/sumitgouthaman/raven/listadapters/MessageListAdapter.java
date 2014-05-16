@@ -73,6 +73,9 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
                 if (prepopulatedMessage != null) {
                     intent.putExtra("prepopulatedMessage", prepopulatedMessage);
                 }
+                if (messageListItems[position].encKey != null) {
+                    intent.putExtra("encKey", messageListItems[position].encKey);
+                }
                 context.startActivity(intent);
                 context.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
             }

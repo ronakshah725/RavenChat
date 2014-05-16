@@ -9,4 +9,5 @@ public class MessageListItem {
     public boolean unread = false;
     public String secretUsername = "";
     public String registrationID = "";
+    public String encKey = null;
 }

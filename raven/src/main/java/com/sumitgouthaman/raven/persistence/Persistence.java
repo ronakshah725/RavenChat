@@ -149,6 +149,9 @@ public class Persistence {
             newContactOb.put("username", newContact.username);
             newContactOb.put("secretUsername", newContact.secretUsername);
             newContactOb.put("registrationID", newContact.registrationID);
+            if (newContact.encKey != null) {
+                newContactOb.put("encKey", newContact.encKey);
+            }
             contactsArr.put(newContactOb);
             SharedPreferences.Editor editor = shared.edit();
             editor.putString("CONTACTS", contactsArr.toString());
@@ -171,6 +174,7 @@ public class Persistence {
                 contacts[i].secretUsername = contactOb.getString("secretUsername");
                 contacts[i].registrationID = contactOb.getString("registrationID");
                 contacts[i].lastMessage = getLastMessage(context, contacts[i].secretUsername);
+                contacts[i].encKey = contactOb.optString("encKey", null);
             }
             return contacts;
         } catch (JSONException je) {
@@ -306,6 +310,7 @@ public class Persistence {
         ArrayList<String> temp = new ArrayList<String>();
         for (Contact c : contacts) {
             temp.add(c.secretUsername);
+            temp.add(c.secretUsername + "_QUEUED");
         }
         String[] validSecrets = temp.toArray(new String[0]);
         String[] storedKeys = getAllKeys(context);
