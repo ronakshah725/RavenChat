@@ -93,5 +93,6 @@
     <string name="is_now">is now</string>
     <string name="not_encrypted">Not Encrypted</string>
     <string name="encrypted">Encrypted</string>
+    <string name="only_use_once">Use this code with only one contact</string>
 
 </resources>

@@ -9,6 +9,7 @@ import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.utils.RandomStrings;
+import com.sumitgouthaman.raven.utils.crypto.KeyGeneratorUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +25,7 @@ import java.util.Arrays;
 public class Persistence {
 
     private static final String key = "RAVEN";
-    private static final String[] persistenceKeys = {"USERNAME", "SECRET_USERNAME", "REGISTRATION_ID", "DEBUG_MESSAGES", "LAST_VERSION", "CONTACTS"};
+    private static final String[] persistenceKeys = {"USERNAME", "SECRET_USERNAME", "REGISTRATION_ID", "DEBUG_MESSAGES", "LAST_VERSION", "CONTACTS", "KEYCACHE"};
 
     public static String getUsername(Context context) {
         SharedPreferences shared = context.getSharedPreferences(key, 0);
@@ -407,5 +408,27 @@ public class Persistence {
         } catch (JSONException je) {
             je.printStackTrace();
         }
+    }
+
+    public static String getNewKey(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String newKey = KeyGeneratorUtils.getNewKey(Persistence.getSecretUsername(context));
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("KEYCACHE", newKey);
+        editor.commit();
+        return newKey;
+    }
+
+    public static String getCachedKey(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        String cachedKey = sharedPreferences.getString("KEYCACHE", null);
+        return cachedKey;
+    }
+
+    public static void clearKeyCache(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("KEYCACHE");
+        editor.commit();
     }
 }
