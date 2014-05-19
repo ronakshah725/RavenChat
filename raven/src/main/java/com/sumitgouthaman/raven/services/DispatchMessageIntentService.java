@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,6 +36,7 @@ public class DispatchMessageIntentService extends IntentService {
             String regId = intent.getStringExtra("registrationID");
             int messageType = intent.getIntExtra("messageType", -1);
             String secretUsername = intent.getStringExtra("targetSecretUsername");
+            String encKey = intent.getStringExtra("encKey");
 
             Message toBeSent = Persistence.getMessageFromQueue(this, secretUsername);
 
@@ -42,7 +44,13 @@ public class DispatchMessageIntentService extends IntentService {
             String messageText = "";
             try {
                 messageJSON.put("secretUsername", Persistence.getSecretUsername(this));
-                messageJSON.put("messageText", toBeSent.messageText);
+                String finalMessageText = null;
+                if (encKey != null) {
+                    finalMessageText = EncryptionUtils.encrypt(toBeSent.messageText, encKey);
+                } else {
+                    finalMessageText = toBeSent.messageText;
+                }
+                messageJSON.put("messageText", finalMessageText);
                 messageText = messageJSON.toString();
             } catch (JSONException e) {
                 e.printStackTrace();
