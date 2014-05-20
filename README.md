@@ -4,7 +4,7 @@ RavenChat or "Raven" is an attempt to build a server-less fully encrypted chat a
 ###Screenshots
 ![Contact List](/screenshots/merged.png "Screenshots")
 ###Contacts Setup Process
-It would probably involve users adding each others to their contacts using a QR code based mechanism. This pairing ideally happens when both users are physically together.
+It involves users adding each others to their contacts using a QR code based mechanism (or NFC if available). This pairing ideally happens when both users are physically together.
 Once the pairing is done they can communicate like any other chat app.
 
 ###Important!

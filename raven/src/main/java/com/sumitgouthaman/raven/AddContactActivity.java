@@ -209,6 +209,8 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                 ob.put("USERNAME", Persistence.getUsername(getActivity()));
                 ob.put("SECRET_USERNAME", Persistence.getSecretUsername(getActivity()));
                 ob.put("GCM_REG_ID", Persistence.getRegistrationID(getActivity()));
+                String encKey = Persistence.getNewKey(getActivity());
+                ob.put("ENC_KEY", encKey);
             } catch (JSONException je) {
                 je.printStackTrace();
             }
