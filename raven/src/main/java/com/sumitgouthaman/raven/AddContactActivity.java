@@ -31,6 +31,7 @@ import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.MessageDispatcher;
 import com.sumitgouthaman.raven.utils.StringToQRBitmap;
+import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -258,12 +259,21 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                         newContact.username = contactOb.getString("USERNAME");
                         newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
                         newContact.registrationID = contactOb.getString("GCM_REG_ID");
+                        newContact.encKey = contactOb.optString("ENC_KEY");
                         Persistence.addNewContact(getActivity(), newContact);
                         JSONObject pairingRequest = new JSONObject();
                         pairingRequest.put("username", Persistence.getUsername(getActivity()));
                         pairingRequest.put("secretUsername", Persistence.getSecretUsername(getActivity()));
                         pairingRequest.put("registrationID", Persistence.getRegistrationID(getActivity()));
-                        final String pairingMessage = pairingRequest.toString();
+                        String tempPairingMessage = pairingRequest.toString();
+                        if(newContact.encKey!=null){
+                            String encryptedText = EncryptionUtils.encrypt(tempPairingMessage, newContact.encKey);
+                            JSONObject encPairingObject = new JSONObject();
+                            encPairingObject.put("cipherText", encryptedText);
+                            encPairingObject.put("secretUsername", Persistence.getSecretUsername(getActivity()));
+                            tempPairingMessage = encPairingObject.toString();
+                        }
+                        final String pairingMessage = tempPairingMessage;
                         final String targetRegId = newContact.registrationID;
                         final String targetName = newContact.username;
                         new AsyncTask() {

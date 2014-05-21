@@ -83,20 +83,28 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     }
                 } else if (recdMessageType == MessageTypes.PAIRING_MESSAGE) {
                     try {
-                        JSONObject pairingRequest = new JSONObject(recdMessageText);
-                        Contact newContact = new Contact();
-                        newContact.username = pairingRequest.getString("username");
-                        newContact.secretUsername = pairingRequest.getString("secretUsername");
-                        newContact.registrationID = pairingRequest.getString("registrationID");
-                        Persistence.addNewContact(context, newContact);
-                        Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
-                        chatThreadIntent.putExtra("secretUsername", newContact.secretUsername);
-                        chatThreadIntent.putExtra("registrationID", newContact.registrationID);
-                        chatThreadIntent.putExtra("contactName", newContact.username);
-                        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                                chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                        String notifMessage = String.format(context.getString(R.string.contact_has_paired), newContact.username);
-                        SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_added), notifMessage, contentIntent);
+                        JSONObject recdObject = new JSONObject(recdMessageText);
+                        String cipherText = recdObject.optString("cipherText", null);
+                        if(cipherText!=null){
+                            //Encryption is supported
+                            //Left to be handled....
+                        }else{
+                            //Not an encrypted connection
+                            JSONObject pairingRequest = new JSONObject(recdMessageText);
+                            Contact newContact = new Contact();
+                            newContact.username = pairingRequest.getString("username");
+                            newContact.secretUsername = pairingRequest.getString("secretUsername");
+                            newContact.registrationID = pairingRequest.getString("registrationID");
+                            Persistence.addNewContact(context, newContact);
+                            Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
+                            chatThreadIntent.putExtra("secretUsername", newContact.secretUsername);
+                            chatThreadIntent.putExtra("registrationID", newContact.registrationID);
+                            chatThreadIntent.putExtra("contactName", newContact.username);
+                            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                                    chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                            String notifMessage = String.format(context.getString(R.string.contact_has_paired), newContact.username);
+                            SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_added), notifMessage, contentIntent);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
