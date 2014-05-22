@@ -13,6 +13,7 @@ import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.SimpleNotificationMaker;
 import com.sumitgouthaman.raven.utils.SimpleSoundNotificationMaker;
+import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,7 +88,38 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         String cipherText = recdObject.optString("cipherText", null);
                         if(cipherText!=null){
                             //Encryption is supported
-                            //Left to be handled....
+                            String cachedKey = Persistence.getCachedKey(context);
+                            if(cachedKey==null){
+                                //No key cached
+                                //Refuse connection
+                                //To be implemented
+                            }else{
+                                //Key is present in cache
+                                //Check if the key is the one which the new contact used
+                                String plainText = EncryptionUtils.decrypt(cipherText, cachedKey);
+                                try{
+                                    JSONObject pairingRequest = new JSONObject(plainText);
+                                    Contact newContact = new Contact();
+                                    newContact.username = pairingRequest.getString("username");
+                                    newContact.secretUsername = pairingRequest.getString("secretUsername");
+                                    newContact.registrationID = pairingRequest.getString("registrationID");
+                                    newContact.encKey = cachedKey;
+                                    Persistence.addNewContact(context, newContact);
+                                    Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
+                                    chatThreadIntent.putExtra("secretUsername", newContact.secretUsername);
+                                    chatThreadIntent.putExtra("registrationID", newContact.registrationID);
+                                    chatThreadIntent.putExtra("contactName", newContact.username);
+                                    chatThreadIntent.putExtra("encKey", cachedKey);
+                                    PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                                            chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                                    String notifMessage = String.format(context.getString(R.string.contact_has_paired_encrypted), newContact.username);
+                                    SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_added), notifMessage, contentIntent);
+                                }catch (JSONException je){
+                                    //The key used was not the same
+                                    //Refuse connection
+                                    //To be implemented
+                                }
+                            }
                         }else{
                             //Not an encrypted connection
                             JSONObject pairingRequest = new JSONObject(recdMessageText);
@@ -112,19 +144,27 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     try {
                         JSONObject newMessage = new JSONObject(recdMessageText);
                         String secretUsername = newMessage.getString("secretUsername");
-                        Message message = new Message();
-                        message.messageText = newMessage.getString("messageText");
-                        message.receivedMessage = true;
-                        message.timestamp = System.currentTimeMillis();
-                        Persistence.addMessage(context, secretUsername, message);
                         Contact user = Persistence.getUser(context, secretUsername);
+
                         if (user != null) {
                             String username = user.username;
                             String userRegID = user.registrationID;
+                            String encKey = user.encKey;
+                            Message message = new Message();
+                            message.messageText = newMessage.getString("messageText");
+                            if(encKey!=null){
+                                message.messageText = EncryptionUtils.decrypt(message.messageText, encKey);
+                            }
+                            message.receivedMessage = true;
+                            message.timestamp = System.currentTimeMillis();
+                            Persistence.addMessage(context, secretUsername, message);
                             Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
                             chatThreadIntent.putExtra("secretUsername", secretUsername);
                             chatThreadIntent.putExtra("registrationID", userRegID);
                             chatThreadIntent.putExtra("contactName", username);
+                            if(encKey!=null){
+                               chatThreadIntent.putExtra("encKey", encKey);
+                            }
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                             if (!inBackground && chatThreadActivity != null && chatThreadActivity.secretUsername.equals(secretUsername)) {
@@ -186,10 +226,14 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         if (user != null) {
                             String username = user.username;
                             String userRegID = user.registrationID;
+                            String encKey = user.encKey;
                             Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
                             chatThreadIntent.putExtra("secretUsername", contactSecretUsername);
                             chatThreadIntent.putExtra("registrationID", userRegID);
                             chatThreadIntent.putExtra("contactName", username);
+                            if(encKey!=null){
+                                chatThreadIntent.putExtra("encKey", encKey);
+                            }
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                             //String message = String.format(context.getString(R.string.contact_is_renamed), oldUsername, newUsername);
