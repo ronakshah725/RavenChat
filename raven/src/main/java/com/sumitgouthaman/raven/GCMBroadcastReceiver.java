@@ -86,18 +86,18 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     try {
                         JSONObject recdObject = new JSONObject(recdMessageText);
                         String cipherText = recdObject.optString("cipherText", null);
-                        if(cipherText!=null){
+                        if (cipherText != null) {
                             //Encryption is supported
                             String cachedKey = Persistence.getCachedKey(context);
-                            if(cachedKey==null){
+                            if (cachedKey == null) {
                                 //No key cached
                                 //Refuse connection
                                 //To be implemented
-                            }else{
+                            } else {
                                 //Key is present in cache
                                 //Check if the key is the one which the new contact used
                                 String plainText = EncryptionUtils.decrypt(cipherText, cachedKey);
-                                try{
+                                try {
                                     JSONObject pairingRequest = new JSONObject(plainText);
                                     Contact newContact = new Contact();
                                     newContact.username = pairingRequest.getString("username");
@@ -114,13 +114,13 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                                             chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                                     String notifMessage = String.format(context.getString(R.string.contact_has_paired_encrypted), newContact.username);
                                     SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_added), notifMessage, contentIntent);
-                                }catch (JSONException je){
+                                } catch (JSONException je) {
                                     //The key used was not the same
                                     //Refuse connection
                                     //To be implemented
                                 }
                             }
-                        }else{
+                        } else {
                             //Not an encrypted connection
                             JSONObject pairingRequest = new JSONObject(recdMessageText);
                             Contact newContact = new Contact();
@@ -152,7 +152,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             String encKey = user.encKey;
                             Message message = new Message();
                             message.messageText = newMessage.getString("messageText");
-                            if(encKey!=null){
+                            if (encKey != null) {
                                 message.messageText = EncryptionUtils.decrypt(message.messageText, encKey);
                             }
                             message.receivedMessage = true;
@@ -162,8 +162,8 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             chatThreadIntent.putExtra("secretUsername", secretUsername);
                             chatThreadIntent.putExtra("registrationID", userRegID);
                             chatThreadIntent.putExtra("contactName", username);
-                            if(encKey!=null){
-                               chatThreadIntent.putExtra("encKey", encKey);
+                            if (encKey != null) {
+                                chatThreadIntent.putExtra("encKey", encKey);
                             }
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -204,6 +204,14 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         JSONObject selfDestructingMessageOb = new JSONObject(recdMessageText);
                         String contactSecretUsername = selfDestructingMessageOb.getString("secretUsername");
                         String message = selfDestructingMessageOb.getString("message");
+
+                        Contact user = Persistence.getUser(context, contactSecretUsername);
+                        String encKey = user.encKey;
+
+                        if (encKey != null) {
+                            message = EncryptionUtils.decrypt(message, encKey);
+                        }
+
                         int destryAfter = selfDestructingMessageOb.getInt("destroyAfter");
                         Intent selfDestructingMessageIntent = new Intent(context, SelfDestructingMessageDisplay.class);
                         selfDestructingMessageIntent.putExtra("secretUsername", contactSecretUsername);
@@ -231,7 +239,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             chatThreadIntent.putExtra("secretUsername", contactSecretUsername);
                             chatThreadIntent.putExtra("registrationID", userRegID);
                             chatThreadIntent.putExtra("contactName", username);
-                            if(encKey!=null){
+                            if (encKey != null) {
                                 chatThreadIntent.putExtra("encKey", encKey);
                             }
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,

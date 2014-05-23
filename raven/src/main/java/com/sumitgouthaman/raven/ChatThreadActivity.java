@@ -160,7 +160,7 @@ public class ChatThreadActivity extends ActionBarActivity {
                     intent.putExtra("registrationID", toRegId);
                     intent.putExtra("messageType", MessageTypes.MORNAL_MESSAGE);
                     intent.putExtra("targetSecretUsername", secretUsername);
-                    if(encKey!=null){
+                    if (encKey != null) {
                         intent.putExtra("encKey", encKey);
                     }
                     getActivity().startService(intent);

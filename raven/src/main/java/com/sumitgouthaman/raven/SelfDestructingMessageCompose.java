@@ -22,10 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sumitgouthaman.raven.listadapters.ChatThreadAdapter;
+import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.MessageDispatcher;
+import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,7 +105,16 @@ public class SelfDestructingMessageCompose extends ActionBarActivity {
                 final String receiverSecretUsername = targetSecretUsername;
                 final String receiverRegID = targetRegId;
                 final String mySecretUsernameStr = mySecretUsername;
-                final String message = messageField.getText().toString();
+                String tempMessage = messageField.getText().toString();
+
+                //Check if message has to be encrypted. If yes, encrypt it.
+                Contact user = Persistence.getUser(SelfDestructingMessageCompose.this, targetSecretUsername);
+                if (user.encKey != null) {
+                    tempMessage = EncryptionUtils.encrypt(tempMessage, user.encKey);
+                }
+
+                final String message = tempMessage;
+
                 if (message.trim().equals("")) {
                     Toast.makeText(SelfDestructingMessageCompose.this, R.string.empty_message, Toast.LENGTH_SHORT).show();
                     return;

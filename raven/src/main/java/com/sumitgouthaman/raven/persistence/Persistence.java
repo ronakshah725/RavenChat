@@ -419,13 +419,13 @@ public class Persistence {
         return newKey;
     }
 
-    public static String getCachedKey(Context context){
+    public static String getCachedKey(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         String cachedKey = sharedPreferences.getString("KEYCACHE", null);
         return cachedKey;
     }
 
-    public static void clearKeyCache(Context context){
+    public static void clearKeyCache(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("KEYCACHE");
