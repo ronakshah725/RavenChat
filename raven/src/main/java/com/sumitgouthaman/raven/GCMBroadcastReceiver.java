@@ -251,6 +251,25 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }else if (recdMessageType == MessageTypes.REJECT_CONNECTION_KEY_INVALID) {
+                    try {
+                        JSONObject updateUsernameMessageOb = new JSONObject(recdMessageText);
+                        String contactSecretUsername = updateUsernameMessageOb.getString("secretUsername");
+                        Contact user = Persistence.getUser(context, contactSecretUsername);
+                        if(user!=null){
+                            String username = user.username;
+                            Persistence.clearContact(context, contactSecretUsername);
+                            String title = context.getString(R.string.pairing_rejected);
+                            String message = String.format(context.getString(R.string.contect_claims_key_expired), username);
+                            //Create notification
+                            Intent messageListIntent = new Intent(context, MessageListActivity.class);
+                            PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                                    messageListIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                            SimpleNotificationMaker.sendNotification(context, title, message, contentIntent);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

@@ -18,7 +18,7 @@ public class KeyGeneratorUtils {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
             sr.setSeed(seed.getBytes());
             KeyGenerator kg = KeyGenerator.getInstance("AES");
-            kg.init(128, sr);
+            kg.init(256, sr);
             arr = (kg.generateKey()).getEncoded();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();

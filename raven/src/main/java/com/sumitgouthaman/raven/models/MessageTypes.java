@@ -11,4 +11,5 @@ public class MessageTypes {
     public static final int REGISTRATION_UPDATE = 4;
     public static final int SELF_DESTRUCTING_MESSAGE = 5;
     public static final int USERNAME_UPDATE = 6;
+    public static final int REJECT_CONNECTION_KEY_INVALID = 7;
 }
