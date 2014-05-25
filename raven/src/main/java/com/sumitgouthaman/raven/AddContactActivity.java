@@ -270,7 +270,7 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                             String encryptedText = EncryptionUtils.encrypt(tempPairingMessage, newContact.encKey);
                             JSONObject encPairingObject = new JSONObject();
                             encPairingObject.put("cipherText", encryptedText);
-                            encPairingObject.put("secretUsername", Persistence.getSecretUsername(getActivity()));
+                            encPairingObject.put("registrationID", Persistence.getRegistrationID(getActivity()));
                             tempPairingMessage = encPairingObject.toString();
                         }
                         final String pairingMessage = tempPairingMessage;

@@ -11,6 +11,7 @@ import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.services.DispatchRejectionMessageIntentService;
 import com.sumitgouthaman.raven.utils.SimpleNotificationMaker;
 import com.sumitgouthaman.raven.utils.SimpleSoundNotificationMaker;
 import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
@@ -92,7 +93,10 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             if (cachedKey == null) {
                                 //No key cached
                                 //Refuse connection
-                                //To be implemented
+                                String targetRegID = recdObject.getString("registrationID");
+                                Intent rejectionIntent = new Intent(context, DispatchRejectionMessageIntentService.class);
+                                rejectionIntent.putExtra("registrationID", targetRegID);
+                                context.startService(rejectionIntent);
                             } else {
                                 //Key is present in cache
                                 //Check if the key is the one which the new contact used
@@ -117,7 +121,10 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                                 } catch (JSONException je) {
                                     //The key used was not the same
                                     //Refuse connection
-                                    //To be implemented
+                                    String targetRegID = recdObject.getString("registrationID");
+                                    Intent rejectionIntent = new Intent(context, DispatchRejectionMessageIntentService.class);
+                                    rejectionIntent.putExtra("registrationID", targetRegID);
+                                    context.startService(rejectionIntent);
                                 }
                             }
                         } else {
