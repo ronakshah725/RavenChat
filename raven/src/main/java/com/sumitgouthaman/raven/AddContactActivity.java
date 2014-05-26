@@ -259,7 +259,7 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                         newContact.username = contactOb.getString("USERNAME");
                         newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
                         newContact.registrationID = contactOb.getString("GCM_REG_ID");
-                        newContact.encKey = contactOb.optString("ENC_KEY");
+                        newContact.encKey = contactOb.optString("ENC_KEY", null);
                         Persistence.addNewContact(getActivity(), newContact);
                         JSONObject pairingRequest = new JSONObject();
                         pairingRequest.put("username", Persistence.getUsername(getActivity()));
