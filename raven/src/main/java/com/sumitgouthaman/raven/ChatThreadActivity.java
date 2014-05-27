@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sumitgouthaman.raven.listadapters.ChatThreadAdapter;
+import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
@@ -48,10 +49,16 @@ public class ChatThreadActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_thread);
         secretUsername = getIntent().getStringExtra("secretUsername");
-        targetRegistrationID = getIntent().getStringExtra("registrationID");
-        contactName = getIntent().getStringExtra("contactName");
         prepopulatedMessage = getIntent().getStringExtra("prepopulatedMessage");
-        encKey = getIntent().getStringExtra("encKey");
+
+        Contact contact = Persistence.getUser(this, secretUsername);
+        if(contact==null){
+            finish();
+        }else{
+            targetRegistrationID = contact.registrationID;
+            contactName=contact.username;
+            encKey = contact.encKey;
+        }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

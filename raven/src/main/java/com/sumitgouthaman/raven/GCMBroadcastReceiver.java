@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.sumitgouthaman.raven.IntentHelpers.IntentCreator;
 import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
@@ -110,11 +111,8 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                                     newContact.registrationID = pairingRequest.getString("registrationID");
                                     newContact.encKey = cachedKey;
                                     Persistence.addNewContact(context, newContact);
-                                    Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
-                                    chatThreadIntent.putExtra("secretUsername", newContact.secretUsername);
-                                    chatThreadIntent.putExtra("registrationID", newContact.registrationID);
-                                    chatThreadIntent.putExtra("contactName", newContact.username);
-                                    chatThreadIntent.putExtra("encKey", cachedKey);
+
+                                    Intent chatThreadIntent = IntentCreator.getChatThreadIntent(context, newContact.secretUsername);
                                     PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                             chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                                     String notifMessage = String.format(context.getString(R.string.contact_has_paired_encrypted), newContact.username);
@@ -136,10 +134,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             newContact.secretUsername = pairingRequest.getString("secretUsername");
                             newContact.registrationID = pairingRequest.getString("registrationID");
                             Persistence.addNewContact(context, newContact);
-                            Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
-                            chatThreadIntent.putExtra("secretUsername", newContact.secretUsername);
-                            chatThreadIntent.putExtra("registrationID", newContact.registrationID);
-                            chatThreadIntent.putExtra("contactName", newContact.username);
+                            Intent chatThreadIntent = IntentCreator.getChatThreadIntent(context, newContact.secretUsername);
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                             String notifMessage = String.format(context.getString(R.string.contact_has_paired), newContact.username);
@@ -156,7 +151,6 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
 
                         if (user != null) {
                             String username = user.username;
-                            String userRegID = user.registrationID;
                             String encKey = user.encKey;
                             Message message = new Message();
                             message.messageText = newMessage.getString("messageText");
@@ -166,13 +160,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             message.receivedMessage = true;
                             message.timestamp = System.currentTimeMillis();
                             Persistence.addMessage(context, secretUsername, message);
-                            Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
-                            chatThreadIntent.putExtra("secretUsername", secretUsername);
-                            chatThreadIntent.putExtra("registrationID", userRegID);
-                            chatThreadIntent.putExtra("contactName", username);
-                            if (encKey != null) {
-                                chatThreadIntent.putExtra("encKey", encKey);
-                            }
+                            Intent chatThreadIntent = IntentCreator.getChatThreadIntent(context, secretUsername);
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                             if (!inBackground && chatThreadActivity != null && chatThreadActivity.secretUsername.equals(secretUsername)) {
@@ -243,16 +231,9 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             String username = user.username;
                             String userRegID = user.registrationID;
                             String encKey = user.encKey;
-                            Intent chatThreadIntent = new Intent(context, ChatThreadActivity.class);
-                            chatThreadIntent.putExtra("secretUsername", contactSecretUsername);
-                            chatThreadIntent.putExtra("registrationID", userRegID);
-                            chatThreadIntent.putExtra("contactName", username);
-                            if (encKey != null) {
-                                chatThreadIntent.putExtra("encKey", encKey);
-                            }
+                            Intent chatThreadIntent = IntentCreator.getChatThreadIntent(context, contactSecretUsername);
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                            //String message = String.format(context.getString(R.string.contact_is_renamed), oldUsername, newUsername);
                             String message = oldUsername + " " + context.getString(R.string.is_now) + " " + newUsername;
                             SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_renamed), message, contentIntent, true);
                         }
