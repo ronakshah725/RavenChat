@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Contact;
-import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 

@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.sumitgouthaman.raven.IntentHelpers.IntentCreator;
@@ -20,8 +19,6 @@ import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.UUID;
 
 public class GCMBroadcastReceiver extends BroadcastReceiver {
     boolean inBackground;
@@ -240,12 +237,12 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }else if (recdMessageType == MessageTypes.REJECT_CONNECTION_KEY_INVALID) {
+                } else if (recdMessageType == MessageTypes.REJECT_CONNECTION_KEY_INVALID) {
                     try {
                         JSONObject updateUsernameMessageOb = new JSONObject(recdMessageText);
                         String contactSecretUsername = updateUsernameMessageOb.getString("secretUsername");
                         Contact user = Persistence.getUser(context, contactSecretUsername);
-                        if(user!=null){
+                        if (user != null) {
                             String username = user.username;
                             Persistence.clearContact(context, contactSecretUsername);
                             String title = context.getString(R.string.pairing_rejected);

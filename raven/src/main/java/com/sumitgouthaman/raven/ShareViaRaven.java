@@ -1,12 +1,9 @@
 package com.sumitgouthaman.raven;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.sumitgouthaman.raven.listadapters.MessageListAdapter;
 import com.sumitgouthaman.raven.models.Contact;

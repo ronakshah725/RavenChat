@@ -9,10 +9,9 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -22,11 +21,13 @@ import com.sumitgouthaman.raven.models.Contact;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.MessageDispatcher;
+import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static android.nfc.NfcAdapter.*;
+import static android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import static android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCallback, OnNdefPushCompleteCallback {
@@ -79,6 +80,8 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
             ob.put("USERNAME", Persistence.getUsername(this));
             ob.put("SECRET_USERNAME", Persistence.getSecretUsername(this));
             ob.put("GCM_REG_ID", Persistence.getRegistrationID(this));
+            String encKey = Persistence.getNewKey(this);
+            ob.put("ENC_KEY", encKey);
         } catch (JSONException je) {
             je.printStackTrace();
         }
@@ -128,12 +131,21 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
             newContact.username = contactOb.getString("USERNAME");
             newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
             newContact.registrationID = contactOb.getString("GCM_REG_ID");
+            newContact.encKey = contactOb.optString("ENC_KEY", null);
             Persistence.addNewContact(this, newContact);
             JSONObject pairingRequest = new JSONObject();
             pairingRequest.put("username", Persistence.getUsername(this));
             pairingRequest.put("secretUsername", Persistence.getSecretUsername(this));
             pairingRequest.put("registrationID", Persistence.getRegistrationID(this));
-            final String pairingMessage = pairingRequest.toString();
+            String tempPairingMessage = pairingRequest.toString();
+            if (newContact.encKey != null) {
+                String encryptedText = EncryptionUtils.encrypt(tempPairingMessage, newContact.encKey);
+                JSONObject encPairingObject = new JSONObject();
+                encPairingObject.put("cipherText", encryptedText);
+                encPairingObject.put("registrationID", Persistence.getRegistrationID(this));
+                tempPairingMessage = encPairingObject.toString();
+            }
+            final String pairingMessage = tempPairingMessage;
             final String targetRegId = newContact.registrationID;
             final String targetName = newContact.username;
             new AsyncTask() {
@@ -162,7 +174,7 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
             }.execute(null, null, null);
         } catch (JSONException je) {
             je.printStackTrace();
-            Toast.makeText(this, getString(R.string.nfc_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.qr_error), Toast.LENGTH_SHORT).show();
         }
     }
 

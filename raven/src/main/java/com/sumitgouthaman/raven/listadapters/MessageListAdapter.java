@@ -14,18 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.sumitgouthaman.raven.ChatThreadActivity;
+import com.sumitgouthaman.raven.IntentHelpers.IntentCreator;
 import com.sumitgouthaman.raven.R;
-import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageListItem;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.utils.MessageDispatcher;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by sumit on 10/3/14.
@@ -66,16 +61,8 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ChatThreadActivity.class);
-                intent.putExtra("secretUsername", messageListItems[position].secretUsername);
-                intent.putExtra("registrationID", messageListItems[position].registrationID);
-                intent.putExtra("contactName", messageListItems[position].contactName);
-                if (prepopulatedMessage != null) {
-                    intent.putExtra("prepopulatedMessage", prepopulatedMessage);
-                }
-                if (messageListItems[position].encKey != null) {
-                    intent.putExtra("encKey", messageListItems[position].encKey);
-                }
+                Intent intent = IntentCreator.getChatThreadIntent(context, messageListItems[position].secretUsername, prepopulatedMessage);
+
                 context.startActivity(intent);
                 context.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
             }

@@ -1,7 +1,6 @@
 package com.sumitgouthaman.raven;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -9,14 +8,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.sumitgouthaman.raven.persistence.Persistence;
-import com.sumitgouthaman.raven.utils.crypto.Base64Utils;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Arrays;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.spec.SecretKeySpec;
 
 
 public class DebugActivity extends ActionBarActivity {

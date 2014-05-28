@@ -1,7 +1,5 @@
 package com.sumitgouthaman.raven.utils.crypto;
 
-import android.util.Log;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 

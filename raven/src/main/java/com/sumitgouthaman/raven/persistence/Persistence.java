@@ -3,7 +3,6 @@ package com.sumitgouthaman.raven.persistence;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
 
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Contact;
@@ -15,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 

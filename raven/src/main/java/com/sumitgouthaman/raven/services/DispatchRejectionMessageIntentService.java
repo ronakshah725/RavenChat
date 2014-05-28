@@ -4,10 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import com.sumitgouthaman.raven.R;
-import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
-import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

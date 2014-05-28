@@ -1,7 +1,6 @@
 package com.sumitgouthaman.raven.listadapters;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,6 @@ import android.widget.Toast;
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.utils.TimestampFormatter;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Created by sumit on 16/3/14.

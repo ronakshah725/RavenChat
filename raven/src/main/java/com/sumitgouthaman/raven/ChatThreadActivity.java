@@ -3,7 +3,6 @@ package com.sumitgouthaman.raven;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sumitgouthaman.raven.listadapters.ChatThreadAdapter;
@@ -24,10 +22,6 @@ import com.sumitgouthaman.raven.models.Message;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.services.DispatchMessageIntentService;
-import com.sumitgouthaman.raven.utils.MessageDispatcher;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class ChatThreadActivity extends ActionBarActivity {
@@ -52,11 +46,11 @@ public class ChatThreadActivity extends ActionBarActivity {
         prepopulatedMessage = getIntent().getStringExtra("prepopulatedMessage");
 
         Contact contact = Persistence.getUser(this, secretUsername);
-        if(contact==null){
+        if (contact == null) {
             finish();
-        }else{
+        } else {
             targetRegistrationID = contact.registrationID;
-            contactName=contact.username;
+            contactName = contact.username;
             encKey = contact.encKey;
         }
 
