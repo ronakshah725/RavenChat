@@ -188,7 +188,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         JSONObject registrationUpdateOb = new JSONObject(recdMessageText);
                         String contactSecretUsername = registrationUpdateOb.getString("secretUsername");
                         String newRegId = registrationUpdateOb.getString("registrationID");
-
+                        Persistence.updateRegistrationID(context, contactSecretUsername, newRegId);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
