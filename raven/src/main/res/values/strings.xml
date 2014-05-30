@@ -97,5 +97,6 @@
     <string name="only_use_once">Use this code with only one contact</string>
     <string name="pairing_rejected">Pairing rejected</string>
     <string name="contect_claims_key_expired">%s claims that the key you provided has expired. Make sure you use latest QR code for pairing!</string>
+    <string name="tts_lang_not_suppported">Text to speech language not supported</string>
 
 </resources>

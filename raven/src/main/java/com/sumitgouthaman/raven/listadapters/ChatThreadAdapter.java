@@ -1,7 +1,9 @@
 package com.sumitgouthaman.raven.listadapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import com.sumitgouthaman.raven.R;
 import com.sumitgouthaman.raven.models.Message;
+import com.sumitgouthaman.raven.services.TTSService;
 import com.sumitgouthaman.raven.utils.TimestampFormatter;
 
 /**
@@ -54,6 +57,17 @@ public class ChatThreadAdapter extends ArrayAdapter<Message> {
         } else if (messages[position].timestamp == -1l) {
             timestampField.setText(context.getString(R.string.dispatched));
             timestampField.setTypeface(null, Typeface.ITALIC);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            rowView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Intent ttsIntent = new Intent(context, TTSService.class);
+                    ttsIntent.putExtra("text", messages[position].messageText);
+                    context.startService(ttsIntent);
+                    return true;
+                }
+            });
         }
 
         return rowView;

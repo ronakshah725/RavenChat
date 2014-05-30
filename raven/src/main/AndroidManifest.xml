@@ -95,6 +95,10 @@
             android:name="com.sumitgouthaman.raven.services.DispatchNameUpdateMessageIntentService"
             android:exported="false" >
         </service>
+        <service
+            android:name="com.sumitgouthaman.raven.services.TTSService"
+            android:exported="false" >
+        </service>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
