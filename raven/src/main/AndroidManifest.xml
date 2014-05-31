@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sumitgouthaman.raven" >
+    package="com.sumitgouthaman.raven">
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
             android:name="com.sumitgouthaman.raven.MessageListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,7 +36,7 @@
 
         <receiver
             android:name="com.sumitgouthaman.raven.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
@@ -46,15 +46,14 @@
 
         <activity
             android:name="com.sumitgouthaman.raven.DebugActivity"
-            android:label="@string/title_activity_debug" >
-        </activity>
+            android:label="@string/title_activity_debug"></activity>
         <activity
             android:name="com.sumitgouthaman.raven.DispatchGCMMessage"
             android:label="@string/title_activity_dispatch_gcmmessage" />
         <activity
             android:name="com.sumitgouthaman.raven.ShareViaRaven"
             android:excludeFromRecents="true"
-            android:label="@string/title_activity_share_via_raven" >
+            android:label="@string/title_activity_share_via_raven">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -65,15 +64,13 @@
         </activity>
         <activity
             android:name="com.sumitgouthaman.raven.SelfDestructingMessageCompose"
-            android:label="@string/title_activity_sefl_destructing_message_compose" >
-        </activity>
+            android:label="@string/title_activity_sefl_destructing_message_compose"></activity>
         <activity
             android:name="com.sumitgouthaman.raven.SelfDestructingMessageDisplay"
-            android:label="@string/title_activity_self_destructing_message_display" >
-        </activity>
+            android:label="@string/title_activity_self_destructing_message_display"></activity>
         <activity
             android:name="com.sumitgouthaman.raven.NFCPairing"
-            android:label="@string/title_activity_nfcpairing" >
+            android:label="@string/title_activity_nfcpairing">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -85,20 +82,16 @@
 
         <service
             android:name="com.sumitgouthaman.raven.services.DispatchMessageIntentService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
         <service
             android:name="com.sumitgouthaman.raven.services.DispatchRegUpdateMessageIntentService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
         <service
             android:name="com.sumitgouthaman.raven.services.DispatchNameUpdateMessageIntentService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
         <service
             android:name="com.sumitgouthaman.raven.services.TTSService"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

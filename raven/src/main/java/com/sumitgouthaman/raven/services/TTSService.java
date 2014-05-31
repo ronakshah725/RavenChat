@@ -1,10 +1,8 @@
 package com.sumitgouthaman.raven.services;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
 import android.os.IBinder;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -86,7 +84,7 @@ public class TTSService extends Service implements TextToSpeech.OnInitListener {
             }
         });
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID,"messageID");
+        map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "messageID");
         mTts.speak(str, TextToSpeech.QUEUE_FLUSH, map);
     }
 }

@@ -25,18 +25,37 @@ import com.sumitgouthaman.raven.utils.MessageDispatcher;
 /**
  * Created by sumit on 10/3/14.
  */
+
+/**
+ * Adapter class for displaying list of Contacts in the first screen
+ */
 public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
 
-    private final Activity context;
-    private final MessageListItem[] messageListItems;
-    private final String mySecretUsername;
+    private final Activity context; //The current context
+    private final MessageListItem[] messageListItems; //Lists of contacts to be displayed
+    private final String mySecretUsername; //Secret username of current user
+    /**
+     * If prepopulatedMessage is not null, then the chat thread opened by clicking on any of the
+     * contacts in the Contacts list will have that message already populated in the message field.
+     */
     private String prepopulatedMessage = null;
 
+    /**
+     * Constructor
+     * @param context - The current context
+     * @param messageListItems - Objects representing contacts to be displayed
+     * @param prepopulatedMessage - Message to be populated in the chat activity
+     */
     public MessageListAdapter(Activity context, MessageListItem[] messageListItems, String prepopulatedMessage) {
         this(context, messageListItems);
         this.prepopulatedMessage = prepopulatedMessage;
     }
 
+    /**
+     * Version of constructor to be used in situations when no pre-populated message is needed.
+     * @param context - The current context
+     * @param messageListItems - Objects representing contacts to be displayed
+     */
     public MessageListAdapter(Activity context, MessageListItem[] messageListItems) {
         super(context, R.layout.listitem_messagelist, messageListItems);
         this.context = context;
@@ -44,11 +63,19 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
         this.mySecretUsername = Persistence.getSecretUsername(context);
     }
 
+    /**
+     * Overridden implementation of the getView method
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View rowView = inflater.inflate(R.layout.listitem_messagelist, parent, false);
+
         final TextView contactNameField = (TextView) rowView.findViewById(R.id.textView_ContactName);
         TextView messagePreviewField = (TextView) rowView.findViewById(R.id.textView_messagePreview);
 
@@ -58,15 +85,21 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
         if (messageListItems[position].unread) {
             contactNameField.setTypeface(null, Typeface.BOLD);
         }
+
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Open the chat thread for the contact
                 Intent intent = IntentCreator.getChatThreadIntent(context, messageListItems[position].secretUsername, prepopulatedMessage);
 
                 context.startActivity(intent);
                 context.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
             }
         });
+
+        /**
+         * Long click triggers an option to un-pair from the contact
+         */
         rowView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -74,6 +107,10 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
                 builder.setMessage(context.getString(R.string.delete_contact) + ": " + messageListItems[position].contactName + "?")
                         .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                /**
+                                 * A message has to be sent to the contact to ensure that up-pairing
+                                 * happens on the contact's device too
+                                 */
                                 new AsyncTask() {
                                     private ProgressDialog progressDialog;
 
@@ -109,7 +146,6 @@ public class MessageListAdapter extends ArrayAdapter<MessageListItem> {
                         })
                         .setIcon(context.getResources().getDrawable(R.drawable.ic_launcher))
                         .setTitle(R.string.dialogTitle_delete_contact);
-                // Create the AlertDialog object and return it
                 builder.show();
                 return true;
             }
