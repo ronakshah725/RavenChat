@@ -20,6 +20,12 @@ import java.util.Arrays;
 /**
  * Created by sumit on 15/3/14.
  */
+
+/**
+ * Class that serves as an interface to the persistence mechanism.
+ * Currently uses SharedPreferences, Could be migrated to SQLLite later while keeping the interface
+ * of the class same.
+ */
 public class Persistence {
 
     private static final String key = "RAVEN";

@@ -1,5 +1,6 @@
 package com.sumitgouthaman.raven;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sumitgouthaman.raven.persistence.Persistence;
+import com.sumitgouthaman.raven.services.DispatchNameUpdateMessageIntentService;
 
 
 public class SettingsActivity extends ActionBarActivity {
@@ -73,6 +75,8 @@ public class SettingsActivity extends ActionBarActivity {
             } else {
                 Persistence.setUsername(this, username);
                 Toast.makeText(this, getResources().getString(R.string.settings_saved), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, DispatchNameUpdateMessageIntentService.class);
+                startService(intent);
                 finish();
             }
 

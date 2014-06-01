@@ -24,6 +24,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service that inform contacts about change in registration id
+ */
 public class DispatchRegUpdateMessageIntentService extends IntentService {
 
     public DispatchRegUpdateMessageIntentService() {
@@ -36,6 +39,9 @@ public class DispatchRegUpdateMessageIntentService extends IntentService {
             String mySecretUsername = Persistence.getSecretUsername(this);
             String newRegId = Persistence.getRegistrationID(this);
 
+            /**
+             * Construct object informing of this change
+             */
             JSONObject messageJSON = new JSONObject();
             String messageText = "";
             try {
@@ -49,7 +55,7 @@ public class DispatchRegUpdateMessageIntentService extends IntentService {
             Contact[] contacts = Persistence.getContacts(this);
             for (Contact c : contacts) {
                 String result = null;
-                int retries = 3;
+                int retries = 3; //No of times to try sending
 
                 while (result == null && retries > 0) {
                     try {
@@ -84,6 +90,10 @@ public class DispatchRegUpdateMessageIntentService extends IntentService {
                 }
 
                 if (result == null) {
+                    /**
+                     * Sending to this contact failed.
+                     * Mark this contact for informing later.
+                     */
                     //To be handled
                 }
             }

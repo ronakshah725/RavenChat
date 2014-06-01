@@ -14,6 +14,10 @@ import java.util.Locale;
 /**
  * Created by sumit on 30/5/14.
  */
+
+/**
+ * Service that invokes Text to Speech to speak out a message
+ */
 public class TTSService extends Service implements TextToSpeech.OnInitListener {
 
     private static final String TAG = "TTSService";

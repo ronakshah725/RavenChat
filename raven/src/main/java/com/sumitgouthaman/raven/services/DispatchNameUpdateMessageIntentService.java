@@ -24,6 +24,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service that dispatches a message to all contacts informing them that the Username was changed
+ */
 public class DispatchNameUpdateMessageIntentService extends IntentService {
 
     public DispatchNameUpdateMessageIntentService() {
@@ -36,6 +39,9 @@ public class DispatchNameUpdateMessageIntentService extends IntentService {
             String mySecretUsername = Persistence.getSecretUsername(this);
             String newUsername = Persistence.getUsername(this);
 
+            /**
+             * Construct the object informing of this change
+             */
             JSONObject messageJSON = new JSONObject();
             String messageText = "";
             try {
@@ -49,7 +55,7 @@ public class DispatchNameUpdateMessageIntentService extends IntentService {
             Contact[] contacts = Persistence.getContacts(this);
             for (Contact c : contacts) {
                 String result = null;
-                int retries = 3;
+                int retries = 3; //Number of times to try for each contact
 
                 while (result == null && retries > 0) {
                     try {
@@ -84,6 +90,9 @@ public class DispatchNameUpdateMessageIntentService extends IntentService {
                 }
 
                 if (result == null) {
+                    /**
+                     * Mark this contact to be informed later
+                     */
                     //To be handled
                 }
             }
