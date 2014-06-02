@@ -8,7 +8,18 @@ import javax.crypto.KeyGenerator;
 /**
  * Created by sumit on 15/5/14.
  */
+
+/**
+ * That that helps generate unique keys.
+ *
+ * Generates 256 bit keys for AES encryption.
+ */
 public class KeyGeneratorUtils {
+    /**
+     * Generate a new key (256 bit for AES encryption)
+     * @param secretUsername - Secret username of user
+     * @return - The generated secret key
+     */
     public static String getNewKey(String secretUsername) {
         String salt = "KNzFSWX7hCcG3qoZJx0V";
         String timestamp = System.currentTimeMillis() + "";
