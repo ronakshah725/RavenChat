@@ -13,7 +13,16 @@ import java.util.EnumMap;
 /**
  * Created by sumit on 18/3/14.
  */
+
+/**
+ * Class to create a bitmap of QR code needed for pairing.
+ */
 public class StringToQRBitmap {
+    /**
+     * Create a bitmap pf QR code representing the given text
+     * @param text - The text to convert to QR code
+     * @return
+     */
     public static Bitmap sting2QRBitmap(String text) {
         BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE;
 

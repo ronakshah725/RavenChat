@@ -22,7 +22,20 @@ import java.util.List;
 /**
  * Created by sumit on 26/3/14.
  */
+
+/**
+ * Class that has method to dispatch a message of differing types.
+ * Does not work asynchronously.
+ */
 public class MessageDispatcher {
+    /**
+     * Method to dispatch a message synchronously
+     * @param context - The context of the activity sending the message
+     * @param regId - Registration ID of the intended receiver
+     * @param messageType - Type of message. Refer MessageTypes class
+     * @param message - The message to be sent
+     * @return - Response returned by the server
+     */
     public static String dispatchMessage(Context context, String regId, int messageType, String message) {
         String result = null;
         try {
@@ -34,6 +47,9 @@ public class MessageDispatcher {
             JSONObject data = new JSONObject();
             data.put("messageType", messageType);
             data.put("messageText", message);
+            /**
+             * Data items required by the GCM server
+             */
             nameValuePairs.add(new BasicNameValuePair("data", data.toString()));
             nameValuePairs.add(new BasicNameValuePair("registration_id", regId));
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));

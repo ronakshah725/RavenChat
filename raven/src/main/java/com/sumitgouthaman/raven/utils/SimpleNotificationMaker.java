@@ -13,11 +13,29 @@ import java.util.UUID;
 /**
  * Created by sumit on 27/3/14.
  */
+
+/**
+ * General purpose class to trigger a notification
+ */
 public class SimpleNotificationMaker {
+    /**
+     * Method to trigger a notification. Replaces any previous notification.
+     * @param context
+     * @param title - Title of the notification
+     * @param msg - Text of the notification
+     * @param contentIntent - PendingIntent to be called when notification is clicked
+     */
     public static void sendNotification(Context context, String title, String msg, PendingIntent contentIntent) {
         sendNotification(context, title, msg, contentIntent, false);
     }
 
+    /**
+     * Method to trigger a notification. Does not replace previous notifications.
+     * @param context
+     * @param title - Title of the notification
+     * @param msg - Text of the notification
+     * @param contentIntent - PendingIntent to be called when notification is clicked
+     */
     public static void sendNotification(Context context, String title, String msg, PendingIntent contentIntent, boolean unique) {
         int NOTIFICATION_ID = 0;
         if (unique) {

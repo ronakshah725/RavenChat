@@ -8,9 +8,18 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 /**
  * Created by sumit on 21/3/14.
  */
+
+/**
+ * Class that has a method to check if Google Play Services is available
+ */
 public class CheckPlayServices {
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
+    /**
+     * Check if Google Pay Services are available
+     * @param activity
+     * @return
+     */
     public static boolean check(Activity activity) {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
         if (resultCode != ConnectionResult.SUCCESS) {
