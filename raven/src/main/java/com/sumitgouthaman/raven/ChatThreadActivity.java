@@ -23,7 +23,9 @@ import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.persistence.Persistence;
 import com.sumitgouthaman.raven.services.DispatchMessageIntentService;
 
-
+/**
+ * Screen of a chat thread
+ */
 public class ChatThreadActivity extends ActionBarActivity {
 
     public static String secretUsername;
@@ -42,9 +44,14 @@ public class ChatThreadActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_thread);
+        //Secret username of the contact
         secretUsername = getIntent().getStringExtra("secretUsername");
+        //If prepolulatedMessage is set, it is autofilled in new message text box
         prepopulatedMessage = getIntent().getStringExtra("prepopulatedMessage");
 
+        /**
+         * Get other relevant details about the contact
+         */
         Contact contact = Persistence.getUser(this, secretUsername);
         if (contact == null) {
             finish();
@@ -60,6 +67,10 @@ public class ChatThreadActivity extends ActionBarActivity {
                     .commit();
         }
 
+        /**
+         * Register a broadcast receiver so that notifications are not triggered when chat thread is
+         * open
+         */
         receiver = new GCMBroadcastReceiver(false, this);
         filter = new IntentFilter();
         filter.addAction("com.google.android.c2dm.intent.RECEIVE");
@@ -75,6 +86,9 @@ public class ChatThreadActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+        /**
+         * Unregisters the broadcast receiver
+         */
         unregisterReceiver(receiver);
     }
 
@@ -94,9 +108,6 @@ public class ChatThreadActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_selfDestructinMessage) {
             Intent intent = new Intent(this, SelfDestructingMessageCompose.class);
@@ -110,6 +121,9 @@ public class ChatThreadActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Refresh thread by fetching messages again from the Persistence layer
+     */
     public void refreshThread() {
         messages = Persistence.getMessages(this, secretUsername);
         cta = new ChatThreadAdapter(this, messages);
@@ -132,6 +146,9 @@ public class ChatThreadActivity extends ActionBarActivity {
 
             messages = Persistence.getMessages(getActivity(), secretUsername);
 
+            /**
+             * Fetch and display current messages
+             */
             messagesList = (ListView) rootView.findViewById(R.id.listView_chatthread);
             cta = new ChatThreadAdapter(getActivity(), messages);
             messagesList.setAdapter(cta);
@@ -139,10 +156,16 @@ public class ChatThreadActivity extends ActionBarActivity {
             final EditText newMessageField = (EditText) rootView.findViewById(R.id.editText_newMessageText);
             final ImageButton newMessageSendButton = (ImageButton) rootView.findViewById(R.id.button_newMessageSend);
 
+            /**
+             * If prepopulatedMessage is set, populate the new message textbox with the message
+             */
             if (prepopulatedMessage != null) {
                 newMessageField.setText(prepopulatedMessage);
             }
 
+            /**
+             * Send the message when button is clicked
+             */
             newMessageSendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -157,6 +180,14 @@ public class ChatThreadActivity extends ActionBarActivity {
                     final String mySecretUsername = Persistence.getSecretUsername(getActivity());
                     final String toRegId = targetRegistrationID;
 
+                    /**
+                     * Create intent to trigger a service to send the message
+                     */
+                    Message newMessage = new Message();
+                    newMessage.timestamp = -1l;
+                    newMessage.receivedMessage = false;
+                    newMessage.messageText = messageText;
+                    Persistence.addMessageToQueue(getActivity(), secretUsername, newMessage);
                     Intent intent = new Intent(getActivity(), DispatchMessageIntentService.class);
                     intent.putExtra("registrationID", toRegId);
                     intent.putExtra("messageType", MessageTypes.MORNAL_MESSAGE);
@@ -165,12 +196,13 @@ public class ChatThreadActivity extends ActionBarActivity {
                         intent.putExtra("encKey", encKey);
                     }
                     getActivity().startService(intent);
+
+                    /**
+                     * Clear the message field
+                     */
                     newMessageField.setText("");
-                    Message newMessage = new Message();
-                    newMessage.timestamp = -1l;
-                    newMessage.receivedMessage = false;
-                    newMessage.messageText = messageText;
-                    Persistence.addMessageToQueue(getActivity(), secretUsername, newMessage);
+
+                    //Refresh the thread
                     messages = Persistence.getMessages(getActivity(), secretUsername);
                     cta = new ChatThreadAdapter(getActivity(), messages);
                     messagesList.setAdapter(cta);

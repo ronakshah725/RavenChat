@@ -36,7 +36,9 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
-
+/**
+ * Activity that shows the Add contact screen
+ */
 public class AddContactActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     /**
@@ -201,28 +203,43 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
             return rootView;
         }
 
+        /**
+         * Creates a pairing QR code and displays it in a ImageView in the activity
+         * @param rootView
+         */
         public void displayMyCode(View rootView) {
+            /**
+             * JSONObject that holds the information needed for pairing
+             */
             JSONObject ob = new JSONObject();
             try {
                 ob.put("USERNAME", Persistence.getUsername(getActivity()));
                 ob.put("SECRET_USERNAME", Persistence.getSecretUsername(getActivity()));
                 ob.put("GCM_REG_ID", Persistence.getRegistrationID(getActivity()));
+                //Generates a new key
                 String encKey = Persistence.getNewKey(getActivity());
                 ob.put("ENC_KEY", encKey);
             } catch (JSONException je) {
                 je.printStackTrace();
             }
+            //Convert from String to a bitmap image of a QR code
             Bitmap bitmap = StringToQRBitmap.sting2QRBitmap(ob.toString());
             ImageView imageview = (ImageView) rootView.findViewById(R.id.imageView_mycode);
             imageview.setImageBitmap(bitmap);
 
         }
 
+        /**
+         * Displays a scan code button that on clicked opens barcode reader
+         * @param rootView
+         */
         public void displayScanCode(View rootView) {
+            //Shows a scan instruction image
             ImageView imageview = (ImageView) rootView.findViewById(R.id.imageView_scanIcon);
             imageview.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.scan1));
             Button scanButton = (Button) rootView.findViewById(R.id.button_startScan);
             scanButton.setOnClickListener(new View.OnClickListener() {
+                //Open any available barcode reader app to scan pairing code from another device
                 @Override
                 public void onClick(View view) {
                     try {
@@ -239,6 +256,12 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
             });
         }
 
+        /**
+         * Called after a barcode is scanned
+         * @param requestCode
+         * @param resultCode
+         * @param data
+         */
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
@@ -247,17 +270,29 @@ public class AddContactActivity extends ActionBarActivity implements ActionBar.T
                 if (resultCode == RESULT_OK) {
                     String contents = data.getStringExtra("SCAN_RESULT");
                     try {
+                        //Get the transferred JSON pairing object
                         JSONObject contactOb = new JSONObject(contents);
+
+                        //If own code is scanned
                         if (contactOb.getString("SECRET_USERNAME").equals(Persistence.getSecretUsername(getActivity()))) {
                             Toast.makeText(getActivity(), R.string.cannot_add_yourself, Toast.LENGTH_SHORT).show();
                             return;
                         }
+
+                        /**
+                         * Extract relevant fields from the received object and store permanently
+                         */
                         Contact newContact = new Contact();
                         newContact.username = contactOb.getString("USERNAME");
                         newContact.secretUsername = contactOb.getString("SECRET_USERNAME");
                         newContact.registrationID = contactOb.getString("GCM_REG_ID");
                         newContact.encKey = contactOb.optString("ENC_KEY", null);
                         Persistence.addNewContact(getActivity(), newContact);
+
+                        /**
+                         * Send pairing request to the new contact so that it can also add this
+                         * device
+                         */
                         JSONObject pairingRequest = new JSONObject();
                         pairingRequest.put("username", Persistence.getUsername(getActivity()));
                         pairingRequest.put("secretUsername", Persistence.getSecretUsername(getActivity()));
