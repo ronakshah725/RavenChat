@@ -31,6 +31,9 @@ import com.sumitgouthaman.raven.utils.CheckPlayServices;
 
 import java.io.IOException;
 
+/**
+ * Screen displaying list of all contacts.
+ */
 public class MessageListActivity extends ActionBarActivity {
 
     GoogleCloudMessaging gcm;
@@ -71,6 +74,9 @@ public class MessageListActivity extends ActionBarActivity {
 
         context = this;
 
+        /**
+         * Check if play services available
+         */
         if (!CheckPlayServices.check(this)) {
             Toast.makeText(this, getString(R.string.play_services_not_supported), Toast.LENGTH_LONG).show();
             finish();
@@ -82,11 +88,19 @@ public class MessageListActivity extends ActionBarActivity {
                     .commit();
         }
 
+        /**
+         * Check whether username is set. If not, prompt for it.
+         */
         initialCheck();
 
         gcm = GoogleCloudMessaging.getInstance(this);
+
+        //Get Registration ID that has been saved by the persistence layer
         regid = getRegistrationId(context);
 
+        /**
+         * If not registered, do it
+         */
         if (regid.isEmpty()) {
             registerInBackground();
         }
@@ -103,16 +117,15 @@ public class MessageListActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            //Show settings screen
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         } else if (id == R.id.action_addContact) {
+            //Show screen that performs pairing
             Intent intent = new Intent(this, AddContactActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -121,6 +134,9 @@ public class MessageListActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Check whether username is set, if not prompt for it to be set
+     */
     public void initialCheck() {
         String username = Persistence.getUsername(this);
         if (username == null) {
@@ -248,6 +264,8 @@ public class MessageListActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_message_list, container, false);
+
+            //Get list of all contacts
             Contact[] contacts = Persistence.getContacts(getActivity());
             MessageListItem[] messages = new MessageListItem[contacts.length];
             for (int i = 0; i < messages.length; i++) {

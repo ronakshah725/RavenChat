@@ -14,7 +14,10 @@ import android.widget.Toast;
 import com.sumitgouthaman.raven.models.MessageTypes;
 import com.sumitgouthaman.raven.utils.MessageDispatcher;
 
-
+/**
+ * Activity that can be used for dispatching simple GCM messages.
+ * Used for testing.
+ */
 public class DispatchGCMMessage extends ActionBarActivity {
 
     EditText regIdField;

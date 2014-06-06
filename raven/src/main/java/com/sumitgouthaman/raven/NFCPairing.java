@@ -63,9 +63,6 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == 0) {
             return true;
@@ -75,6 +72,9 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
+        /**
+         * Create JSON object that holds fields necessary for pairing
+         */
         JSONObject ob = new JSONObject();
         try {
             ob.put("USERNAME", Persistence.getUsername(this));
@@ -112,7 +112,7 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
     }
 
     /**
-     * Parses the NDEF Message from the intent and prints to the TextView
+     * Parses the pairing related info in the message and performs pairing
      */
     void processIntent(Intent intent) {
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
@@ -122,7 +122,14 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
         // record 0 contains the MIME type, record 1 is the AAR, if present
         String pairingString = (new String(msg.getRecords()[0].getPayload()));
         try {
+            /**
+             * Interpret the JSON object and extract relevant pairing related data
+             */
             JSONObject contactOb = new JSONObject(pairingString);
+
+            /**
+             * If the person tries adding their own device
+             */
             if (contactOb.getString("SECRET_USERNAME").equals(Persistence.getSecretUsername(this))) {
                 Toast.makeText(this, R.string.cannot_add_yourself, Toast.LENGTH_SHORT).show();
                 return;
@@ -133,6 +140,10 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
             newContact.registrationID = contactOb.getString("GCM_REG_ID");
             newContact.encKey = contactOb.optString("ENC_KEY", null);
             Persistence.addNewContact(this, newContact);
+
+            /**
+             * Create a new pairing request object to be sent over the network to the other person
+             */
             JSONObject pairingRequest = new JSONObject();
             pairingRequest.put("username", Persistence.getUsername(this));
             pairingRequest.put("secretUsername", Persistence.getSecretUsername(this));
@@ -148,6 +159,9 @@ public class NFCPairing extends ActionBarActivity implements CreateNdefMessageCa
             final String pairingMessage = tempPairingMessage;
             final String targetRegId = newContact.registrationID;
             final String targetName = newContact.username;
+            /**
+             * Sent the pairing object
+             */
             new AsyncTask() {
                 private ProgressDialog progressDialog;
 
