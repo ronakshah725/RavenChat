@@ -20,15 +20,35 @@ import com.sumitgouthaman.raven.utils.crypto.EncryptionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Receiver that is triggered when a message is received. It takes appropriate action based on the
+ * type and validity of the message
+ */
 public class GCMBroadcastReceiver extends BroadcastReceiver {
+    /**
+     * inBackground determines if the receiver is running in the background, or it has been
+     * registered by a foreground activity.
+     * If in fact an activity has registered the receiver, it suppresses things like notifications
+     * and triggers UI update.
+     */
     boolean inBackground;
-    ChatThreadActivity chatThreadActivity;
-    Context context;
 
+    ChatThreadActivity chatThreadActivity; //Reference to the activity that registered the receiver
+    Context context; //Current context
+
+    /**
+     * Constructor called when the receiver is being invoked in the background.
+     * It sets the inBackground variable to True
+     */
     public GCMBroadcastReceiver() {
         inBackground = true;
     }
 
+    /**
+     * Constructor called when register is registered from an activity
+     * @param notify - if false, no notifications are created for normal messages
+     * @param cta - The activity registering the receiver
+     */
     public GCMBroadcastReceiver(boolean notify, ChatThreadActivity cta) {
         this.inBackground = notify;
         this.chatThreadActivity = cta;
@@ -66,6 +86,8 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                 String recd = extras.getString("data");
                 int recdMessageType = -1;
                 String recdMessageText = "----";
+
+                //Try parsing the data object received
                 try {
                     JSONObject data = new JSONObject(recd);
                     recdMessageType = data.getInt("messageType");
@@ -73,7 +95,11 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                 } catch (JSONException nfe) {
                     Persistence.addDebugMessages(context, "Coundn't parse message type");
                 }
+
                 if (recdMessageType == MessageTypes.DEBUG_MESSAGE) {
+                    /**
+                     * Debug messages can be used to check if messages are being received correctly
+                     */
                     Persistence.addDebugMessages(context, "Received: " + "Message of type: " + recdMessageType + " => " + recdMessageText);
                     PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                             new Intent(context, DebugActivity.class), 0);
@@ -83,7 +109,15 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         SimpleSoundNotificationMaker.sendNotification(context);
                     }
                 } else if (recdMessageType == MessageTypes.PAIRING_MESSAGE) {
+                    /**
+                     * Message sent by a device after scanning code.
+                     */
                     try {
+                        /**
+                         * First we check if the message has a cipherText field.
+                         * If yes, it is attempting an encrypted connection. Else, it is a
+                         * un-encrypted one.
+                         */
                         JSONObject recdObject = new JSONObject(recdMessageText);
                         String cipherText = recdObject.optString("cipherText", null);
                         if (cipherText != null) {
@@ -101,6 +135,9 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                                 //Check if the key is the one which the new contact used
                                 String plainText = EncryptionUtils.decrypt(cipherText, cachedKey);
                                 try {
+                                    /**
+                                     * Parse necessary fields from the object and save contact
+                                     */
                                     JSONObject pairingRequest = new JSONObject(plainText);
                                     Contact newContact = new Contact();
                                     newContact.username = pairingRequest.getString("username");
@@ -141,6 +178,9 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 } else if (recdMessageType == MessageTypes.MORNAL_MESSAGE) {
+                    /**
+                     * Regular person to person message
+                     */
                     try {
                         JSONObject newMessage = new JSONObject(recdMessageText);
                         String secretUsername = newMessage.getString("secretUsername");
@@ -151,12 +191,20 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                             String encKey = user.encKey;
                             Message message = new Message();
                             message.messageText = newMessage.getString("messageText");
+                            /**
+                             * If encryption key is set for the contact, decrypt the messageText
+                             * field
+                             */
                             if (encKey != null) {
                                 message.messageText = EncryptionUtils.decrypt(message.messageText, encKey);
                             }
                             message.receivedMessage = true;
                             message.timestamp = System.currentTimeMillis();
+
+                            //Save the message against the appropriate contact
                             Persistence.addMessage(context, secretUsername, message);
+
+                            //Trigger notification
                             Intent chatThreadIntent = IntentCreator.getChatThreadIntent(context, secretUsername);
                             PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                     chatThreadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -172,18 +220,28 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 } else if (recdMessageType == MessageTypes.REMOVE_CONTACT) {
+                    /**
+                     * Message sent for un-pairing
+                     */
                     String toBeRemoved = recdMessageText;
                     Contact user = Persistence.getUser(context, toBeRemoved);
                     if (user != null) {
                         String username = user.username;
+
+                        //Create notification informing of the un-pairing
                         String notifMessage = String.format(context.getString(R.string.contact_has_unpaired), username);
                         Intent messageListIntent = new Intent(context, MessageListActivity.class);
                         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                                 messageListIntent, PendingIntent.FLAG_CANCEL_CURRENT);
                         SimpleNotificationMaker.sendNotification(context, context.getString(R.string.contact_unpaired), notifMessage, contentIntent);
+
+                        //Delete the contact from message
                         Persistence.clearContact(context, toBeRemoved);
                     }
                 } else if (recdMessageType == MessageTypes.REGISTRATION_UPDATE) {
+                    /**
+                     * Indicates that one of the contacts has had a change in its registration ID
+                     */
                     try {
                         JSONObject registrationUpdateOb = new JSONObject(recdMessageText);
                         String contactSecretUsername = registrationUpdateOb.getString("secretUsername");
@@ -193,6 +251,10 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 } else if (recdMessageType == MessageTypes.SELF_DESTRUCTING_MESSAGE) {
+                    /**
+                     * Message that only triggers a notification and a screen to display.
+                     * This message is not persisted.
+                     */
                     try {
                         JSONObject selfDestructingMessageOb = new JSONObject(recdMessageText);
                         String contactSecretUsername = selfDestructingMessageOb.getString("secretUsername");
@@ -217,6 +279,10 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 } else if (recdMessageType == MessageTypes.USERNAME_UPDATE) {
+                    /**
+                     * Indicates that one of the contacts has changed their username.
+                     * It triggers a corresponding change in the persistence layer.
+                     */
                     try {
                         JSONObject updateUsernameMessageOb = new JSONObject(recdMessageText);
                         String contactSecretUsername = updateUsernameMessageOb.getString("secretUsername");
@@ -238,6 +304,10 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 } else if (recdMessageType == MessageTypes.REJECT_CONNECTION_KEY_INVALID) {
+                    /**
+                     * Indicates that a pairing request this device sent to another device was
+                     * rejected by the other device.
+                     */
                     try {
                         JSONObject updateUsernameMessageOb = new JSONObject(recdMessageText);
                         String contactSecretUsername = updateUsernameMessageOb.getString("secretUsername");
@@ -259,6 +329,7 @@ public class GCMBroadcastReceiver extends BroadcastReceiver {
                 }
             }
         }
+        //Consume the broadcast
         abortBroadcast();
     }
 
